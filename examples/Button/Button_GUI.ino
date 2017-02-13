@@ -2,7 +2,7 @@
 
 //initialize Virtual Dual Port RAM arrays:
 // these are the memory registers that the UART is going to read and write through the Amulet protocol
-byte myBytes[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
 word myWords[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 AmuletUART myModule(115200);  // initialize the AmuletUART module as a global
