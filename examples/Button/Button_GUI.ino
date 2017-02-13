@@ -1,11 +1,12 @@
-#include <AmuletUART.h>
+#include <AmuletLCD.h>
+
 
 //initialize Virtual Dual Port RAM arrays:
 // these are the memory registers that the UART is going to read and write through the Amulet protocol
 
 word myWords[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
-AmuletUART myModule(115200);  // initialize the AmuletUART module as a global
+AmuletLCD myModule(115200);  // initialize the AmuletUART module as a global
 
 void setup()                    // run once, when the sketch starts
 {
