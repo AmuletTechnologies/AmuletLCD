@@ -1,7 +1,10 @@
+
 /* Read a Potentiometer on Analog input 0 and store in local buffer waiting for Amulet to request the data.
 *  To make Amulet request the proper variable, place this command in a view widget's (bargraph, numericField, etc) Href in GEmstudio:
 *  Amulet:uart1.word(0).value()
 * For other ports, change uart1 to your selected port.
+* 
+* The GEMstudio project file is located located in the AmuletLCD library directory under folder called "extras"
 */
 
 #include <AmuletLCD.h>
