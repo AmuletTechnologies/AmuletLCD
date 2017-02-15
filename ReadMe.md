@@ -31,10 +31,10 @@ Note that the Arduino Wire library has a buffer size of 32 bytes. This limits th
 "Arduino External EEPROM Library" by Jack Christensen is licensed under [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/).
 
 ## Installation ##
-To use the **extEEPROM Library**:  
-- Go to http://github.com/JChristensen/extEEPROM, click the **Download ZIP** button and save the ZIP file to a convenient location on your PC.
-- Uncompress the downloaded file.  This will result in a folder containing all the files for the library, that has a name that includes the branch name, usually **extEEPROM-master**.
-- Rename the folder to just **extEEPROM**.
+To use the **Arduino Amulet UART Communication Library**:  
+- Go to http://github.com/AmuletTechnologies/AmuletLCD, click the **Download ZIP** button and save the ZIP file to a convenient location on your PC.
+- Uncompress the downloaded file.  This will result in a folder containing all the files for the library, that has a name that includes the branch name, usually **AmuletLCD-master**.
+- Rename the folder to just **AmuletLCD**.
 - Copy the renamed folder to the Arduino sketchbook\libraries folder.
 
 ## Examples ##

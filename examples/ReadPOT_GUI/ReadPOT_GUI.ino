@@ -4,8 +4,8 @@
 *  Amulet:uart1.word(0).value()
 * For other ports, change uart1 to your selected port.
 * 
-* The GEMstudio project file is located located in the AmuletLCD library directory under folder called "extras"
-*/
+* The GEMstudio project file is located in the AmuletLCD library directory under folder called "extras". Examples of numeric field, 
+* bargraph and image sequence are shown.
 
 #include <AmuletLCD.h>
 
