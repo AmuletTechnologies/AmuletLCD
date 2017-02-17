@@ -1,7 +1,7 @@
 # Arduino Amulet UART Communication Library v1.0 #
 http://github.com/Amulettechnologies/
 ReadMe file  
-Johnny Gohata  Feb 2017
+Brian Deters  Feb 2017
 
 
 ## Introduction ##
