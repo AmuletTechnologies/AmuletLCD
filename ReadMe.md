@@ -15,7 +15,7 @@ The library abstracts out the having to learn various opcodes, the complexity of
 
 If you want to know in detail how the Amulet protocol works, you can look at the source in the library.  The code is well documented with comments, to make it easy to understand. 
 
-"Arduino External EEPROM Library" is licensed under Lesser General Public License 
+"Arduino Amulet UART Communication Library" is licensed under Lesser General Public License 
  [(LGPL Version 2.1)](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html).
 
 ## Installation ##
