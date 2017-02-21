@@ -1,6 +1,6 @@
 /*
   Amulet.h - Library for communicating to GEMmodule over UART.
-  Created by Daniel M. Gopen, August, 26 2014.
+  Created by Brian Deters, February 13, 2017.
   Released into the public domain.
 */
 
@@ -136,7 +136,7 @@ int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value)
 }
 
 /**
-* Utility function to caluculate the MODBUS CRC of the given array.
+* Utility function to calculate the MODBUS CRC of the given array.
 * @param ptr uint8_t* the array to calculate
 * @param count uint16_t the length of the array
 * @return uint16_t The calculated CRC value.
@@ -459,7 +459,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
         break;
     }
   }
-  //else for Recieve master command - CRC mismatch: do nothing. Amulet will resend after timeout
+  //else for Receive master command - CRC mismatch: do nothing. Amulet will resend after timeout
 }
 
 /**
