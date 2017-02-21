@@ -182,7 +182,7 @@ void AmuletLCD::serialEvent()
 void AmuletLCD::CRC_State_Machine(uint8_t b){  
   //TODO: implement state "waiting for response from master command" , implement Array commands, Fix Set replies to new format.
   static uint16_t i;     //remaining bytes before CRC for known length commands (non-string)
-  static uint16_t count; //count of bytes left
+  static int16_t count; //count of bytes left
   switch(_UART_State){
     case _RECIEVE_BEGIN:   //begin - look for a valid address
       if(b == _HOST_ADDRESS){

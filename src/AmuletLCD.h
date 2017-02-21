@@ -50,7 +50,7 @@ class AmuletLCD
     uint32_t getColor(uint8_t loc);
     int8_t setColor(uint8_t loc, uint16_t value);
     
-    void AmuletLCD::serialEvent();
+    void serialEvent();
 	
     private:
         //Virtual Dual Port RAM arrays:
