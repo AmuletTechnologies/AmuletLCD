@@ -26,23 +26,42 @@ To use the **Arduino Amulet UART Communication Library**:
 - Copy the renamed folder into the libraries folder under your Arduino installation directory. 
 
 ## Examples ##
-The following example Arduino sketches are included with the **Amulet communication library**:
+The following examples are included with the **Amulet communication library**:
+###  Blinky_GUI  
+
+A slider GUI on the Amulet display is used to control the blink rate of the onboard LED of the Arduino Uno.  The display passes the value to variable, AmuletWords[0]. The range of values go from 0 to 500.  The Arduino updates AmuletWords[0] as the slider changes.
+
+    void loop() {
+		interval = AmuletWords[0];		//slider value from display 
+		digitalWrite(13, HIGH);  		// set the LED on
+		delay(interval);              	// wait for interval sec.
+		digitalWrite(13, LOW);    		// set the LED off
+		delay(interval);              	// wait for interval sec.
+	}
+  
 ###  Button_GUI  
 
-Reads the state of a checkbox widget placed on the Amulet display and uses the state to turn on/off the onboard LED. The variable AmuletBytes[0] gets assigned by the Amulet display and gets communicated over the serial port to Aruino.  The Arduino just uses the value directly to turn on/off the led.  The following two lines are all that's needed in the main Loop of the Arduino code.
+A check box GUI on the Amulet display in the form of an on/off switch controls the state of the onboard LED of the Arduino. The byte value, either 0x00 (off) or 0x01 (on) gets communicated to Aduino, within the variable, AmuletBytes[0]. 
 
-**value = AmuletBytes[0]; </br>
-  digitalWrite(13, value);**
+    void loop() {
+       	value = AmuletBytes[0];
+    	digitalWrite(13, value);
+      	delay(100);
+    } 
+  
 
 ###  ReadPOT_GUI  
 
-The values of a POT is read by Arduino using the analog pin 0 (A0) and this value is communicated to the Amulet display. The communication to the Amulet display is handled all by one line of code in the main Loop.
+The values of a POT is read by Arduino using the analog pin 0 (A0) and this value is communicated to the Amulet display by the assignment of AmultWords[0]. 
 
-**AmuletWords[0] = analogRead(0);** </br> 
 
+    void loop() {
+       	AmuletWords[0] = analogRead(0);
+     	 delay(100);
+    }
 
 The AmuletWords variable is used rather than AmuletBytes because the POT value goes from 0 to 1023.
 
 
 ## GEMstudio Software ##
-Amulet offers free software to program the Amulet modules. The software says it is a trial version, but for GUI projects under 5 pages, the software is full featured. All you need is to register.   [Free GEMstudio](http://www.amulettechnologies/index.php/sales/try-software).  The GEMstudio project files, Button_GUI.gemp and ReadPOT__GUI.gemp are included with this library under the folder called extras.  
+Amulet offers free software to program the Amulet modules. The software says it is a trial version, but for GUI projects under 5 pages, the software is full featured. You just need to register on their website.   [Free GEMstudio](http://www.amulettechnologies/index.php/sales/try-software).  The GEMstudio project files for the 3 examples can be found in the extras folder of the library.
