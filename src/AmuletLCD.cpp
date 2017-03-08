@@ -88,7 +88,7 @@ int8_t AmuletLCD::setByte(uint8_t loc, uint8_t value)
 	if(Serial.availableForWrite() >= 6)
 	{
 		uint8_t setByteCommand[6] = {_AMULET_ADDRESS, _SET_BYTE, loc, value, 0, 0};
-		uint16_t CRC = calcCRC(setByteCommand, 5);  //TODO: make a function to calculate AND append the CRC to the buffer
+		uint16_t CRC = calcCRC(setByteCommand, 4);  //TODO: make a function to calculate AND append the CRC to the buffer
 		setByteCommand[4] = CRC & 0xFF;
 		setByteCommand[5] = (CRC >> 8) & 0xFF;
 		Serial.write(setByteCommand,6);
