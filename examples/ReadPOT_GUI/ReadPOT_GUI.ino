@@ -6,6 +6,7 @@
 * 
 * The GEMstudio project file is located in the AmuletLCD library directory under folder called "extras". Examples of numeric field, 
 * bargraph and image sequence are shown.
+*/
 
 #include <AmuletLCD.h>
 
