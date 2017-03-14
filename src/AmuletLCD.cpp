@@ -64,6 +64,38 @@ void AmuletLCD::setColorPointer(uint32_t * ptr, uint16_t ptrSize)
 }
 
 /**
+* Set up memory for  function callbacks for use with Amulet commands: Amulet:UARTn.invokeRPC(index)
+* @param ptr functionPointer * The array used to store the function addresses
+* @param ptrSize uint16_t The length of the local array. Amulet RPC max index is 255
+*/
+void AmuletLCD::setRPCPointer(RPC_Entry * ptr, uint16_t ptrSize)
+{
+	_RPCs = ptr;
+	_RPCsLength = ptrSize;
+}
+
+/**
+* Set up a single function callback for use with Amulet commands: Amulet:UARTn.invokeRPC(index)
+* @param index uint8_t The index to store the RPC function. Amulet RPC max index is 255
+* @param function functionPointer The name of the function
+*/
+void AmuletLCD::registerRPC(uint8_t index, functionPointer function)
+{
+	if (index < _RPCsLength)
+		_RPCs[index].function = function;
+}
+
+/**
+* Calls a function callback. Used by Amulet commands: Amulet:UARTn.invokeRPC(index)
+* @param index uint8_t The index where the RPC function is stored. Amulet RPC max index is 255
+*/
+void AmuletLCD::callRPC(uint8_t index)
+{
+	if (index < _RPCsLength)
+		(_RPCs[index].function)();
+}
+
+/**
 * Read the Byte from the local array, which may or may not match the state of Amulet InternalRAM.Byte memory
 * Expecting the Amulet Display to send a master command to set this value, so we dont block with a UART request.
 * @param loc uint8_t the index into the local array
@@ -79,8 +111,8 @@ uint8_t AmuletLCD::getByte(uint8_t loc)
 
 /**
 * Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory
-* @param loc uint8_t the index into the local array
-* @param value uint8_t the index into the local array
+* @param loc uint8_t the index into the Amulet Byte array
+* @param value uint8_t the value to set
 * @return int8_t On error, -1. No error, returns 0
 */
 int8_t AmuletLCD::setByte(uint8_t loc, uint8_t value)
@@ -102,7 +134,7 @@ int8_t AmuletLCD::setByte(uint8_t loc, uint8_t value)
 /**
 * Read the Word from the local array, which may or may not match the state of Amulet InternalRAM.Word memory
 * Expecting the Amulet Display to send a master command to set this value, so we dont block with a UART request.
-* @param loc uint8_t the index into the local array
+* @param loc uint8_t the index into the local _Words array
 * @return uint16_t the indexed value of local buffer, if loc < _BytesLength. Otherwise, 0;
 */
 uint16_t AmuletLCD::getWord(uint8_t loc)
@@ -115,8 +147,8 @@ uint16_t AmuletLCD::getWord(uint8_t loc)
 
 /**
 * Send out a serial command to set the Word in the Amulet InternalRAM.Word memory
-* @param loc uint8_t the index into the local _Words array
-* @param value uint16_t the value to set _Words[loc] to.
+* @param loc uint8_t the index into the Amulet word array
+* @param value uint16_t the value to set
 * @return int8_t On error, -1. No error, returns 0
 */
 int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value)
@@ -136,7 +168,29 @@ int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value)
 }
 
 /**
-* Utility function to calculate the MODBUS CRC of the given array.
+* Send out a serial command to set the Color in the Amulet InternalRAM.Color memory
+* @param loc uint8_t the index into the Amulet color array
+* @param value uint32_t the value to set
+* @return int8_t On error, -1. No error, returns 0
+*/
+int8_t AmuletLCD::setColor(uint8_t loc, uint32_t value)
+{
+	if(Serial.availableForWrite() >= 9)
+	{
+		uint8_t setWordCommand[9] = {_AMULET_ADDRESS,_SET_COLOR,loc, uint8_t((value >> 24) & 0xFF), uint8_t((value >> 16) & 0xFF), uint8_t((value >> 8) & 0xFF), uint8_t(value & 0xFF), 0, 0};
+		uint16_t CRC = calcCRC(setWordCommand, 7);  //TODO: make a function to calculate AND append the CRC to the buffer
+		setWordCommand[7] = (uint8_t)(CRC & 0xFF);
+		setWordCommand[8] = (uint8_t)((CRC >> 8) & 0xFF);
+		Serial.write(setWordCommand,9);
+		return 0;
+		// TODO: set up response state machine
+	}
+	else
+		return -1;
+}
+
+/**
+* Utility function to caluculate the MODBUS CRC of the given array.
 * @param ptr uint8_t* the array to calculate
 * @param count uint16_t the length of the array
 * @return uint16_t The calculated CRC value.
@@ -454,12 +508,12 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
         SetCmd_Reply(_SET_COLOR_ARRAY);
         break;
       case _INVOKE_RPC:
-        //TODO: write RPC handler here
+        callRPC(buf[2]);
         SetCmd_Reply(_INVOKE_RPC);
         break;
     }
   }
-  //else for Receive master command - CRC mismatch: do nothing. Amulet will resend after timeout
+  //else for Recieve master command - CRC mismatch: do nothing. Amulet will resend after timeout
 }
 
 /**

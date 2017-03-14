@@ -32,6 +32,13 @@
 #define AMULET_RX_BUF_LEN    64
 
 
+typedef void (* functionPointer) ();
+
+typedef struct {
+  functionPointer function;
+} RPC_Entry;
+
+
 class AmuletLCD
 {
   public:
@@ -40,6 +47,8 @@ class AmuletLCD
     void setWordPointer(uint16_t * ptr, uint16_t ptrSize);
     void setBytePointer(uint8_t * ptr, uint16_t ptrSize);
     void setColorPointer(uint32_t * ptr, uint16_t ptrSize);
+	void setRPCPointer(RPC_Entry * ptr, uint16_t ptrSize);
+	void registerRPC(uint8_t index, functionPointer function);
 
     uint8_t getByte(uint8_t loc);
     int8_t setByte(uint8_t loc, uint8_t value);
@@ -47,8 +56,8 @@ class AmuletLCD
     uint16_t getWord(uint8_t loc);
     int8_t setWord(uint8_t loc, uint16_t value);
 
-    uint32_t getColor(uint8_t loc);
-    int8_t setColor(uint8_t loc, uint16_t value);
+    //uint32_t getColor(uint8_t loc);
+    int8_t setColor(uint8_t loc, uint32_t value);
     
     void serialEvent();
 	
@@ -60,6 +69,9 @@ class AmuletLCD
         uint16_t _WordsLength;   //max length = 256
         uint32_t * _Colors;
         uint16_t _ColorsLength;  //max length = 256
+		RPC_Entry * _RPCs;
+		uint16_t _RPCsLength;    //max length = 256
+		
         // no string or RPC support at this time
 
         uint32_t _baud;
@@ -77,6 +89,7 @@ class AmuletLCD
         boolean checkCRC(uint8_t *buf, uint16_t bufLen);
         void processUARTCommand(uint8_t *buf, uint16_t bufLen);
         void SetCmd_Reply(uint8_t OPCODE);
+		void callRPC(uint8_t index);
     
 };
 
