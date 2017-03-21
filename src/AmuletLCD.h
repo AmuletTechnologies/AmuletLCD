@@ -31,14 +31,20 @@
 #define AMULET_TX_BUF_LEN    64
 #define AMULET_RX_BUF_LEN    64
 
-
+/**
+* typedef used by RPC_Entry.
+*/
 typedef void (* functionPointer) ();
-
+/**
+* struct used to make Amulet RPC setup simpler.
+*/
 typedef struct {
-  functionPointer function;
+	functionPointer function;
 } RPC_Entry;
 
-
+/**
+* A class used to manage the UART state machine between the Amulet display and Arduino.
+*/
 class AmuletLCD
 {
   public:

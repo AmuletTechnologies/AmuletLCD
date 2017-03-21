@@ -8,7 +8,7 @@
 #include "AmuletLCD.h"
 
 /**
-* constructor
+* Constructor. Initializes state machine variables
 */
 
 AmuletLCD::AmuletLCD()
