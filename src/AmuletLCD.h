@@ -24,13 +24,16 @@
 
 #include "Arduino.h"
 
-// Define the buffer lengths here.
+// Define the buffer lengths here, if the user hasnt set their own.
 // This is long enough for most messages. 
 // Change to send/receive long arrays.
 // Max is 0x400 bytes.
+#ifndef AMULET_TX_BUF_LEN
 #define AMULET_TX_BUF_LEN    64
+#endif
+#ifndef AMULET_RX_BUF_LEN
 #define AMULET_RX_BUF_LEN    64
-
+#endif
 /**
 * typedef used by RPC_Entry.
 */
@@ -50,6 +53,7 @@ class AmuletLCD
   public:
     AmuletLCD();  
     void begin(uint32_t baud);
+	void begin(uint32_t baud, uint8_t config);
     void setWordPointer(uint16_t * ptr, uint16_t ptrSize);
     void setBytePointer(uint8_t * ptr, uint16_t ptrSize);
     void setColorPointer(uint32_t * ptr, uint16_t ptrSize);
@@ -57,14 +61,24 @@ class AmuletLCD
 	void registerRPC(uint8_t index, functionPointer function);
 
     uint8_t getByte(uint8_t loc);
+	uint8_t requestByte(uint8_t loc);
+	uint8_t requestBytes(uint8_t start, uint8_t count);
     int8_t setByte(uint8_t loc, uint8_t value);
+	int8_t setByte(uint8_t loc, uint8_t value, uint8_t waitForResponse);
 
     uint16_t getWord(uint8_t loc);
+	uint8_t requestWord(uint8_t loc);
+	uint8_t requestWords(uint8_t start, uint8_t count);
     int8_t setWord(uint8_t loc, uint16_t value);
+	int8_t setWord(uint8_t loc, uint16_t value, uint8_t waitForResponse);
 
-    //uint32_t getColor(uint8_t loc);
+    uint32_t getColor(uint8_t loc);
+	uint8_t requestColor(uint8_t loc);
+	uint8_t requestColors(uint8_t start, uint8_t count);
     int8_t setColor(uint8_t loc, uint32_t value);
-    
+	int8_t setColor(uint8_t loc, uint32_t value, uint8_t waitForResponse);
+	
+    uint32_t readError();
     void serialEvent();
 	
     private:
@@ -78,17 +92,39 @@ class AmuletLCD
 		RPC_Entry * _RPCs;
 		uint16_t _RPCsLength;    //max length = 256
 		
-        // no string or RPC support at this time
-
-        uint32_t _baud;
+        // no string support at this time
+		uint32_t  _Timeout_ms;
+		uint8_t   _retries;
+        uint32_t  _baud;
+		uint8_t   _config;
+		uint32_t  _errorCount;
+		uint32_t  _lastError;
+		uint8_t   _reply;
+		volatile uint8_t _GetByteReply;
+		volatile uint8_t _GetWordReply;
+		volatile uint8_t _GetColorReply;
+		volatile uint8_t _GetStringReply;
+		volatile uint8_t _GetBytesReply;
+		volatile uint8_t _GetWordsReply;
+		volatile uint8_t _GetColorsReply;
+		
+		volatile uint8_t _SetByteReply;
+		volatile uint8_t _SetWordReply;
+		volatile uint8_t _SetColorReply;
+		volatile uint8_t _SetStringReply;
+		volatile uint8_t _SetBytesReply;
+		volatile uint8_t _SetWordsReply;
+		volatile uint8_t _SetColorsReply;
 
         uint8_t _RxBuffer[AMULET_RX_BUF_LEN];
         uint8_t _TxBuffer[AMULET_TX_BUF_LEN];
         uint16_t _RxBufferLength;
 		uint16_t _TxBufferLength;
         uint16_t _UART_State;
-
+		
+		uint8_t send_command_blocking(uint8_t * command, uint16_t length);
         uint16_t calcCRC(uint8_t *ptr, uint16_t count);
+		void appendCRC(uint8_t *ptr, uint16_t count);
         void setup();                    // run once, when the sketch starts    
         void CRC_State_Machine(uint8_t b);
         int8_t recieve_OpcodeParser(uint8_t b);    
@@ -96,6 +132,7 @@ class AmuletLCD
         void processUARTCommand(uint8_t *buf, uint16_t bufLen);
         void SetCmd_Reply(uint8_t OPCODE);
 		void callRPC(uint8_t index);
+		void setError();
     
 };
 

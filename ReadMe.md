@@ -1,4 +1,4 @@
-# Arduino Amulet UART Communication Library v1.0 #
+# Arduino Amulet UART Communication Library v1.1 #
 
 
 [Complete library Help Files](https://amulettechnologies.github.io/AmuletLCD/)
