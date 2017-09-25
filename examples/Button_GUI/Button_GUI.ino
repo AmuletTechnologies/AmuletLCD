@@ -28,8 +28,7 @@ void setup() {
 
 void loop() {
     value = AmuletBytes[0];
-	  digitalWrite(13, value);
-  	delay(100);         
+	  digitalWrite(13, value);      
   }
 
 //This method automatically gets called if there is any serial data available
@@ -37,3 +36,4 @@ void loop() {
 void serialEvent() {
     myModule.serialEvent();  //send any incoming data to the Amulet state machine
 }
+

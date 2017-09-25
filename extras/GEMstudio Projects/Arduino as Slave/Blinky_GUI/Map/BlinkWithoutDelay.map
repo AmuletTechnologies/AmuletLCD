@@ -1,0 +1,84 @@
+LCD Size: 480 x 272
+LCD Manufacturer: Amulet
+LCD Part Number: STK-CY-043
+Touch Panel: STK-CY-043
+Init File: Init None
+SDRAM Part Number: IS42S32800D (256 MBit)
+Size of SDRAM: 0x2000000
+Size of Serial Data Flash: 0x400000
+Serial Data Flash used by OS: 0x43400
+Minimum Serial Data Flash Sector: 0x80
+Color Depth: 32
+
+Page_1_preCache (GEM page)    Flash Index = 0x20
+===============
+      Object Name               Object Type            Flash Used (Remaining)    SDRAM Used (Remaining)
+      -----------               -----------            ----------------------    ----------------------
+      PAGE HEADER                                      0x3c       (0x3bcbc0)                                                               
+      No Name                   Meta Object            0x3c       (0x3bcb84)     0x0        (0x1ec8cb0)                                          
+      No Name                   Cached Image Dir       0xc        (0x3bcb78)     0xc        (0x1ec8ca4)                                              
+      No Name                   Cached Image           0xc        (0x3bcb6c)     0xea4c     (0x1eba258)                                             
+      No Name                   Cached Image           0xc        (0x3bcb60)     0x2f04     (0x1eb7354)                                             
+      No Name                   Cached Font            0x0        (0x3bcb60)     0x14b8     (0x1eb5e9c)                                            
+      No Name                   Cached Font            0x0        (0x3bcb60)     0x1154     (0x1eb4d48)                                            
+      No Name                   Cached Font            0x0        (0x3bcb60)     0xbfc0     (0x1ea8d88)                                            
+      PAGE FOOTER                                      0x2        (0x3bcb5e)                                                              
+                                                       ----------------------    ----------------------
+                                               Totals  0x9e       (0x3bcb5e)     0x1ff28    (0x1ea8d88)                                
+
+
+Page_1 (GEM page)    Flash Index = 0x21
+======
+      Object Name               Object Type            Flash Used (Remaining)    SDRAM Used (Remaining)
+      -----------               -----------            ----------------------    ----------------------
+      PAGE HEADER                                      0x2c       (0x3bcad0)                                                               
+      MySlider_1                Slider                 0x74       (0x3bca5c)     0x14848    (0x1e94540)                                            
+      MyNumField_1              Numeric Field          0x6c       (0x3bc9f0)     0x0        (0x1e94540)                                                 
+        IWC of MyNumField_1     IWC Object             0x24       (0x3bc9cc)     0x0        (0x1e94540)                                                       
+      PAGE FOOTER                                      0x2        (0x3bc9ca)                                                              
+                                                       ----------------------    ----------------------
+                                               Totals  0x132      (0x3bc9ca)     0x14848    (0x1e94540)                                 
+
+
+Servo_channel_63x238.png (Image File)    Flash Index = 0x22
+========================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x3d6      (0x3bc5aa)                                               
+
+
+Servo_handle.png (Image File)    Flash Index = 0x23
+================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x12fa     (0x3bb286)                                                
+
+
+Arial_24.auf (Font File)    Flash Index = 0x24
+============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0xbfc6     (0x3af2ba)                                                
+
+
+fontHdr.auf (Font Header File)    Flash Index = 0xf
+===========
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x42       (0x3af23e)                                              
+
+
+internalRAM.bin (InternalRAM File)    Flash Index = 0x6
+===============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x213c     (0x3ad0c4)                                                
+
+
+lcdConfig.bin (LCD Configuration File)    Flash Index = 0x3
+=============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0xba       (0x3acfc6)                                              
+
+

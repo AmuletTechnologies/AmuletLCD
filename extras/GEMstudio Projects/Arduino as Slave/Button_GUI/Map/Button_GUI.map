@@ -1,0 +1,125 @@
+LCD Size: 480 x 272
+LCD Manufacturer: Amulet
+LCD Part Number: STK-CY-043
+Touch Panel: STK-CY-043
+Init File: Init None
+SDRAM Part Number: IS42S32800D (256 MBit)
+Size of SDRAM: 0x2000000
+Size of Serial Data Flash: 0x400000
+Serial Data Flash used by OS: 0x43400
+Minimum Serial Data Flash Sector: 0x80
+Color Depth: 32
+
+Page_1_preCache (GEM page)    Flash Index = 0x20
+===============
+      Object Name               Object Type            Flash Used (Remaining)    SDRAM Used (Remaining)
+      -----------               -----------            ----------------------    ----------------------
+      PAGE HEADER                                      0x4c       (0x3bcbb0)                                                               
+      No Name                   Meta Object            0x3c       (0x3bcb74)     0x0        (0x1ec8cc0)                                          
+      No Name                   Cached Image Dir       0xc        (0x3bcb68)     0x20       (0x1ec8ca0)                                               
+      No Name                   Cached Image           0xc        (0x3bcb5c)     0x29524    (0x1e9f77c)                                              
+      No Name                   Cached Image           0xc        (0x3bcb50)     0x7f804    (0x1e1ff78)                                              
+      No Name                   Cached Image           0xc        (0x3bcb44)     0x824      (0x1e1f754)                                            
+      No Name                   Cached Image           0xc        (0x3bcb38)     0x824      (0x1e1ef30)                                            
+      No Name                   Cached Image           0xc        (0x3bcb2c)     0x8ca4     (0x1e1628c)                                             
+      No Name                   Cached Image           0xc        (0x3bcb20)     0x8ca4     (0x1e0d5e8)                                             
+      No Name                   Cached Image           0xc        (0x3bcb14)     0x8ca4     (0x1e04944)                                             
+      No Name                   Cached Font            0x0        (0x3bcb14)     0x14b8     (0x1e0348c)                                            
+      No Name                   Cached Font            0x0        (0x3bcb14)     0x1154     (0x1e02338)                                            
+      PAGE FOOTER                                      0x2        (0x3bcb12)                                                              
+                                                       ----------------------    ----------------------
+                                               Totals  0xea       (0x3bcb12)     0xc6988    (0x1e02338)                                
+
+
+Page_1 (GEM page)    Flash Index = 0x21
+======
+      Object Name               Object Type            Flash Used (Remaining)    SDRAM Used (Remaining)
+      -----------               -----------            ----------------------    ----------------------
+      PAGE HEADER                                      0x50       (0x3bcaac)                                                               
+      background                Image                  0x20       (0x3bca8c)     0x0        (0x1e02338)                                       
+      Arduin_Uno                Image                  0x20       (0x3bca6c)     0x0        (0x1e02338)                                       
+      MultiHref2                Multiple Functions     0x1c       (0x3bca50)     0x0        (0x1e02338)                                                    
+      LED_CONTROL               Check Box              0x70       (0x3bc9e0)     0x0        (0x1e02338)                                            
+      Checker                   Check Box Master       0x1c       (0x3bc9c4)     0x0        (0x1e02338)                                               
+        IWC of Checker          IWC Object             0x24       (0x3bc9a0)     0x0        (0x1e02338)                                                  
+      LED_INDICATOR             Image Sequence         0x28       (0x3bc978)     0x0        (0x1e02338)                                                   
+        UART of LED_INDICATOR   UART Object            0x24       (0x3bc954)     0x0        (0x1e02338)                                                          
+      StaticString_1            String Field           0x9c       (0x3bc8b8)     0x1648     (0x1e00cf0)                                                     
+        UART of StaticString_1  UART Object            0x24       (0x3bc894)     0x0        (0x1e00cf0)                                                           
+      StaticString_2            String Field           0x9c       (0x3bc7f8)     0x1648     (0x1dff6a8)                                                     
+        UART of StaticString_2  UART Object            0x24       (0x3bc7d4)     0x0        (0x1dff6a8)                                                           
+      PAGE FOOTER                                      0x2        (0x3bc7d2)                                                              
+                                                       ----------------------    ----------------------
+                                               Totals  0x32a      (0x3bc7d2)     0x2c90     (0x1dff6a8)                                
+
+
+Arduin_Uno_246x172.png (Image File)    Flash Index = 0x22
+======================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x2491e    (0x397e62)                                                 
+
+
+background_480x272_jpegtran.jpg (Image File)    Flash Index = 0x23
+===============================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x7d4e     (0x3900b2)                                                
+
+
+sm_blue_led.png (Image File)    Flash Index = 0x24
+===============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x71a      (0x38f966)                                               
+
+
+off_led.png (Image File)    Flash Index = 0x25
+===========
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x1e       (0x38f8e2)                                              
+
+
+Switch-ON_75x120.png (Image File)    Flash Index = 0x26
+====================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x221e     (0x38d662)                                                
+
+
+Switch-Neutral_75x120.png (Image File)    Flash Index = 0x27
+=========================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x20fa     (0x38b506)                                                
+
+
+Switch-OFF_75x120.png (Image File)    Flash Index = 0x28
+=====================
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x21c6     (0x38933a)                                                
+
+
+fontHdr.auf (Font Header File)    Flash Index = 0xf
+===========
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x32       (0x3892ce)                                              
+
+
+internalRAM.bin (InternalRAM File)    Flash Index = 0x6
+===============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0x213c     (0x387144)                                                
+
+
+lcdConfig.bin (LCD Configuration File)    Flash Index = 0x3
+=============
+                                                       Flash Used (Remaining)
+                                                       ----------------------
+                                                       0xba       (0x387046)                                              
+
+

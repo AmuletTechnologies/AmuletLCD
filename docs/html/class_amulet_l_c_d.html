@@ -29,6 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Arduino Amulet Driver
+   &#160;<span id="projectnumber">1.1</span>
    </div>
    <div id="projectbrief">Library for an Arduino communicating to the Amulet OS via CRC protocol over UART</div>
   </td>
@@ -96,6 +97,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a60d6b22f432449e6566cba3b7063f10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeba35ca59b20f8c20e23972da6112a0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#aeba35ca59b20f8c20e23972da6112a0b">begin</a> (uint32_t baud)</td></tr>
 <tr class="separator:aeba35ca59b20f8c20e23972da6112a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a048a1ec2802f93e2718e1945ff63e7b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a048a1ec2802f93e2718e1945ff63e7b2">begin</a> (uint32_t baud, uint8_t config)</td></tr>
+<tr class="separator:a048a1ec2802f93e2718e1945ff63e7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b14db99b42ff8c6fbfb526a0a419d41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a0b14db99b42ff8c6fbfb526a0a419d41">setWordPointer</a> (uint16_t *ptr, uint16_t ptrSize)</td></tr>
 <tr class="separator:a0b14db99b42ff8c6fbfb526a0a419d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7514e6421b8711324d30dd7283f49945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a7514e6421b8711324d30dd7283f49945">setBytePointer</a> (uint8_t *ptr, uint16_t ptrSize)</td></tr>
@@ -104,18 +107,40 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad096c081b9bf869b359d85589655c077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f51fa60ba6a3db837fe14df59781727"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a6f51fa60ba6a3db837fe14df59781727">setRPCPointer</a> (<a class="el" href="struct_r_p_c___entry.html">RPC_Entry</a> *ptr, uint16_t ptrSize)</td></tr>
 <tr class="separator:a6f51fa60ba6a3db837fe14df59781727"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a048c34fb1cb4e5472c77d881cb22c823"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a048c34fb1cb4e5472c77d881cb22c823">registerRPC</a> (uint8_t index, functionPointer function)</td></tr>
+<tr class="memitem:a048c34fb1cb4e5472c77d881cb22c823"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a048c34fb1cb4e5472c77d881cb22c823">registerRPC</a> (uint8_t index, <a class="el" href="_amulet_l_c_d_8h.html#accaf3afee8fbefe1de6be69d1caaec44">functionPointer</a> function)</td></tr>
 <tr class="separator:a048c34fb1cb4e5472c77d881cb22c823"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64147b42fb4da964a8035cc754b21b3a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a64147b42fb4da964a8035cc754b21b3a">getByte</a> (uint8_t loc)</td></tr>
 <tr class="separator:a64147b42fb4da964a8035cc754b21b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11267e1cb5d33e43f80bf0e91967ce8c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a11267e1cb5d33e43f80bf0e91967ce8c">requestByte</a> (uint8_t loc)</td></tr>
+<tr class="separator:a11267e1cb5d33e43f80bf0e91967ce8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab55a5af4bdffcb0a9757d419241f5cbe"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#ab55a5af4bdffcb0a9757d419241f5cbe">requestBytes</a> (uint8_t start, uint8_t count)</td></tr>
+<tr class="separator:ab55a5af4bdffcb0a9757d419241f5cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0375d44fed7d8a8fb56053d331be555d"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a0375d44fed7d8a8fb56053d331be555d">setByte</a> (uint8_t loc, uint8_t value)</td></tr>
 <tr class="separator:a0375d44fed7d8a8fb56053d331be555d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf0202fb7c921b18d315c6f4a0be0bbf"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#acf0202fb7c921b18d315c6f4a0be0bbf">setByte</a> (uint8_t loc, uint8_t value, uint8_t waitForResponse)</td></tr>
+<tr class="separator:acf0202fb7c921b18d315c6f4a0be0bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141030e6d0b6dcc3c39dbbee9d6e5907"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a141030e6d0b6dcc3c39dbbee9d6e5907">getWord</a> (uint8_t loc)</td></tr>
 <tr class="separator:a141030e6d0b6dcc3c39dbbee9d6e5907"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e496a28d4a7e425c39eef2cbb6300aa"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a8e496a28d4a7e425c39eef2cbb6300aa">requestWord</a> (uint8_t loc)</td></tr>
+<tr class="separator:a8e496a28d4a7e425c39eef2cbb6300aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81fb19b8990ce2d62e891334abea2694"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a81fb19b8990ce2d62e891334abea2694">requestWords</a> (uint8_t start, uint8_t count)</td></tr>
+<tr class="separator:a81fb19b8990ce2d62e891334abea2694"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeccb0f771ef2b7d30f10d61c9ef466b1"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#aeccb0f771ef2b7d30f10d61c9ef466b1">setWord</a> (uint8_t loc, uint16_t value)</td></tr>
 <tr class="separator:aeccb0f771ef2b7d30f10d61c9ef466b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a445fea390a4087f3cc2617f445e82415"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a445fea390a4087f3cc2617f445e82415">setWord</a> (uint8_t loc, uint16_t value, uint8_t waitForResponse)</td></tr>
+<tr class="separator:a445fea390a4087f3cc2617f445e82415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ee5efb0c43aefba62370bfecd56d775"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a5ee5efb0c43aefba62370bfecd56d775">getColor</a> (uint8_t loc)</td></tr>
+<tr class="separator:a5ee5efb0c43aefba62370bfecd56d775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12f8ab90e2a52637ddaa66f55e1a04e5"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a12f8ab90e2a52637ddaa66f55e1a04e5">requestColor</a> (uint8_t loc)</td></tr>
+<tr class="separator:a12f8ab90e2a52637ddaa66f55e1a04e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23e14e3300048662c29c794f77005533"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a23e14e3300048662c29c794f77005533">requestColors</a> (uint8_t start, uint8_t count)</td></tr>
+<tr class="separator:a23e14e3300048662c29c794f77005533"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae53ff07abd414ab93e814b29495ec9a"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#aae53ff07abd414ab93e814b29495ec9a">setColor</a> (uint8_t loc, uint32_t value)</td></tr>
 <tr class="separator:aae53ff07abd414ab93e814b29495ec9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e6e1403379eb018dc9facd7d8ec3a0"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#ab9e6e1403379eb018dc9facd7d8ec3a0">setColor</a> (uint8_t loc, uint32_t value, uint8_t waitForResponse)</td></tr>
+<tr class="separator:ab9e6e1403379eb018dc9facd7d8ec3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a115690918fb2b99404dbbdc584cf01"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a3a115690918fb2b99404dbbdc584cf01">readError</a> ()</td></tr>
+<tr class="separator:a3a115690918fb2b99404dbbdc584cf01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2225477d8acea9b5c83520cf3f2af937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_amulet_l_c_d.html#a2225477d8acea9b5c83520cf3f2af937">serialEvent</a> ()</td></tr>
 <tr class="separator:a2225477d8acea9b5c83520cf3f2af937"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -142,7 +167,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="aeba35ca59b20f8c20e23972da6112a0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeba35ca59b20f8c20e23972da6112a0b">&#9670;&nbsp;</a></span>begin()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aeba35ca59b20f8c20e23972da6112a0b">&#9670;&nbsp;</a></span>begin() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,9 +181,44 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Start communication at specified baud rate </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Start communication at specified baud rate with default configuration (SERIAL_8N1) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">baud</td><td>uint32_t the communications rate specified in bits per second, default 115200 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a048a1ec2802f93e2718e1945ff63e7b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a048a1ec2802f93e2718e1945ff63e7b2">&#9670;&nbsp;</a></span>begin() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AmuletLCD::begin </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>baud</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>config</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Start communication at specified baud rate and configuration See <a href="http://www.arduino.cc/en/Serial/Begin">http://www.arduino.cc/en/Serial/Begin</a> for valid configuration Macros. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">baud</td><td>uint32_t the communications rate specified in bits per second, default 115200 </td></tr>
+    <tr><td class="paramname">config</td><td>uint8_t Macro that sets data, parity, and stop bits, default SERIAL_8N1 </td></tr>
   </table>
   </dd>
 </dl>
@@ -180,13 +240,38 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read the Byte from the local array, which may or may not match the state of Amulet InternalRAM.Byte memory Expecting the Amulet Display to send a master command to set this value, so we dont block with a UART request. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Read the Byte from the local array, which may or may not match the state of Amulet InternalRAM.Byte memory Expecting either the Amulet Display to send a master command to set this value, or you can use requestByte or requestBytes to update the values before reading. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>uint8_t the index into the local array </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>uint8_t the indexed value of local buffer if loc &lt; _BytesLength. Otherwise, 0; </dd></dl>
+
+</div>
+</div>
+<a id="a5ee5efb0c43aefba62370bfecd56d775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ee5efb0c43aefba62370bfecd56d775">&#9670;&nbsp;</a></span>getColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t AmuletLCD::getColor </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Read the Color from the local array, which may or may not match the state of Amulet InternalRAM.Color memory Expecting either the Amulet Display to send a master command to set this value, or you can use requestColor or requestColors to update the values before reading. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the local Color array </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>uint16_t the indexed value of local buffer, if loc &lt; _ColorsLength. Otherwise, 0; </dd></dl>
 
 </div>
 </div>
@@ -205,13 +290,31 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read the Word from the local array, which may or may not match the state of Amulet InternalRAM.Word memory Expecting the Amulet Display to send a master command to set this value, so we dont block with a UART request. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Read the Word from the local array, which may or may not match the state of Amulet InternalRAM.Word memory Expecting either the Amulet Display to send a master command to set this value, or you can use requestWord or requestWords to update the values before reading. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>uint8_t the index into the local _Words array </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>uint16_t the indexed value of local buffer, if loc &lt; _BytesLength. Otherwise, 0; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>uint16_t the indexed value of local buffer, if loc &lt; _WordsLength. Otherwise, 0; </dd></dl>
+
+</div>
+</div>
+<a id="a3a115690918fb2b99404dbbdc584cf01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a115690918fb2b99404dbbdc584cf01">&#9670;&nbsp;</a></span>readError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t AmuletLCD::readError </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Read the current error status, then reset the status. </p><dl class="section return"><dt>Returns</dt><dd>the current error count </dd></dl>
 
 </div>
 </div>
@@ -230,7 +333,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">functionPointer&#160;</td>
+          <td class="paramtype"><a class="el" href="_amulet_l_c_d_8h.html#accaf3afee8fbefe1de6be69d1caaec44">functionPointer</a>&#160;</td>
           <td class="paramname"><em>function</em>&#160;</td>
         </tr>
         <tr>
@@ -247,6 +350,189 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a11267e1cb5d33e43f80bf0e91967ce8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11267e1cb5d33e43f80bf0e91967ce8c">&#9670;&nbsp;</a></span>requestByte()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestByte </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Byte from Amulet Display, and wait for a response. Copy the response into the local array at the same index. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet and local array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="ab55a5af4bdffcb0a9757d419241f5cbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab55a5af4bdffcb0a9757d419241f5cbe">&#9670;&nbsp;</a></span>requestBytes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestBytes </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Byte Array from Amulet Display, and wait for a response. Copy the response into the local array at the same indices. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start</td><td>uint8_t the first index into the Amulet and local array. </td></tr>
+    <tr><td class="paramname">count</td><td>uint8_t the number of variables requested. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a12f8ab90e2a52637ddaa66f55e1a04e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12f8ab90e2a52637ddaa66f55e1a04e5">&#9670;&nbsp;</a></span>requestColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestColor </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Color from Amulet Display, and wait for a response. Copy the response into the local array at the same index. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet and local array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a23e14e3300048662c29c794f77005533"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23e14e3300048662c29c794f77005533">&#9670;&nbsp;</a></span>requestColors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestColors </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Color Array from Amulet Display, and wait for a response. Copy the response into the local array at the same indices. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start</td><td>uint8_t the first index into the Amulet and local array. </td></tr>
+    <tr><td class="paramname">count</td><td>uint8_t the number of variables requested. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a8e496a28d4a7e425c39eef2cbb6300aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e496a28d4a7e425c39eef2cbb6300aa">&#9670;&nbsp;</a></span>requestWord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestWord </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Word from Amulet Display, and wait for a response. Copy the response into the local array at the same index. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet and local array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a81fb19b8990ce2d62e891334abea2694"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81fb19b8990ce2d62e891334abea2694">&#9670;&nbsp;</a></span>requestWords()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t AmuletLCD::requestWords </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request the Word Array from Amulet Display, and wait for a response. Copy the response into the local array at the same indices. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start</td><td>uint8_t the first index into the Amulet and local array. </td></tr>
+    <tr><td class="paramname">count</td><td>uint8_t the number of variables requested. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -269,7 +555,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a0375d44fed7d8a8fb56053d331be555d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0375d44fed7d8a8fb56053d331be555d">&#9670;&nbsp;</a></span>setByte()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0375d44fed7d8a8fb56053d331be555d">&#9670;&nbsp;</a></span>setByte() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,14 +579,57 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory and wait for the response </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet Byte array </td></tr>
     <tr><td class="paramname">value</td><td>uint8_t the value to set </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int8_t On error, -1. No error, returns 0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="acf0202fb7c921b18d315c6f4a0be0bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf0202fb7c921b18d315c6f4a0be0bbf">&#9670;&nbsp;</a></span>setByte() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int8_t AmuletLCD::setByte </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>waitForResponse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory can optionally wait for response or just get out </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet Byte array </td></tr>
+    <tr><td class="paramname">value</td><td>uint8_t the value to set </td></tr>
+    <tr><td class="paramname">waitForResponse</td><td>uint8_t true will block until response is received or timeout occurs </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received or skipped, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -340,7 +669,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="aae53ff07abd414ab93e814b29495ec9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae53ff07abd414ab93e814b29495ec9a">&#9670;&nbsp;</a></span>setColor()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae53ff07abd414ab93e814b29495ec9a">&#9670;&nbsp;</a></span>setColor() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -364,14 +693,57 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Send out a serial command to set the Color in the Amulet InternalRAM.Color memory </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Send out a serial command to set the Color in the Amulet InternalRAM.Color memory and wait for a response </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet color array </td></tr>
     <tr><td class="paramname">value</td><td>uint32_t the value to set </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int8_t On error, -1. No error, returns 0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="ab9e6e1403379eb018dc9facd7d8ec3a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9e6e1403379eb018dc9facd7d8ec3a0">&#9670;&nbsp;</a></span>setColor() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int8_t AmuletLCD::setColor </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>waitForResponse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Send out a serial command to set the Color in the Amulet InternalRAM.Color memory can optionally wait for response or just get out </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet Color array </td></tr>
+    <tr><td class="paramname">value</td><td>uint32_t the value to set </td></tr>
+    <tr><td class="paramname">waitForResponse</td><td>uint8_t true will block until response is received or timeout occurs </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received or skipped, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -446,7 +818,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="aeccb0f771ef2b7d30f10d61c9ef466b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeccb0f771ef2b7d30f10d61c9ef466b1">&#9670;&nbsp;</a></span>setWord()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aeccb0f771ef2b7d30f10d61c9ef466b1">&#9670;&nbsp;</a></span>setWord() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,14 +842,57 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Send out a serial command to set the Word in the Amulet InternalRAM.Word memory </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Send out a serial command to set the Word in the Amulet InternalRAM.Word memory and wait for a response </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet word array </td></tr>
     <tr><td class="paramname">value</td><td>uint16_t the value to set </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int8_t On error, -1. No error, returns 0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if response was received, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a445fea390a4087f3cc2617f445e82415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a445fea390a4087f3cc2617f445e82415">&#9670;&nbsp;</a></span>setWord() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int8_t AmuletLCD::setWord </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>loc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>waitForResponse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Send out a serial command to set the Word in the Amulet InternalRAM.Word memory can optionally wait for response or just get out </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>uint8_t the index into the Amulet Word array </td></tr>
+    <tr><td class="paramname">value</td><td>uint16_t the value to set </td></tr>
+    <tr><td class="paramname">waitForResponse</td><td>uint8_t true will block until response is received or timeout occurs </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t true if correct response was received or skipped, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -518,7 +933,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="_amulet_l_c_d_8h_source.html">AmuletLCD.h</a></li>
-<li>src/AmuletLCD.cpp</li>
+<li>src/<a class="el" href="_amulet_l_c_d_8cpp.html">AmuletLCD.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

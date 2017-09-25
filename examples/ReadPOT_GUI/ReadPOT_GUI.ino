@@ -26,7 +26,6 @@ void setup() {
 void loop() {
   //store analog data in local buffer and wait for Amulet to poll that buffer.
   AmuletWords[0] = analogRead(0);
-  delay(100);
 }
 
 //This method automatically gets called if there is any serial data available
@@ -34,3 +33,4 @@ void loop() {
 void serialEvent() {
     myModule.serialEvent();  //send any incoming data to the Amulet state machine
 }
+
