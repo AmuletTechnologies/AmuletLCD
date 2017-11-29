@@ -34,6 +34,11 @@
 #ifndef AMULET_RX_BUF_LEN
 #define AMULET_RX_BUF_LEN    64
 #endif
+
+#ifndef MAX_STRING_LENGTH
+#define MAX_STRING_LENGTH    25
+#endif
+
 /**
 * typedef used by RPC_Entry.
 */
@@ -78,13 +83,15 @@ class AmuletLCD
     int8_t setColor(uint8_t loc, uint32_t value);
 	int8_t setColor(uint8_t loc, uint32_t value, uint8_t waitForResponse);
 	
+	int8_t setString(uint8_t loc, const char * str);
+	
     uint32_t readError();
     void serialEvent();
 	
     private:
         //Virtual Dual Port RAM arrays:
         uint8_t * _Bytes; 
-        uint8_t _BytesLength;    //max length = 256
+        uint16_t _BytesLength;    //max length = 256
         uint16_t * _Words;
         uint16_t _WordsLength;   //max length = 256
         uint32_t * _Colors;

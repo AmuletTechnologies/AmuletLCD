@@ -41,7 +41,11 @@ void AmuletLCD::begin(uint32_t baud){
 void AmuletLCD::begin(uint32_t baud, uint8_t config){
 	_baud = baud;
 	_config = config;
-	Serial.begin(baud, config);           // set up Serial library
+	#ifdef ESP8266
+	begin(baud, (SerialConfig)config);
+	#else
+	Serial.begin(baud, config);
+	#endif
 }
 
 /**
@@ -366,6 +370,19 @@ uint8_t AmuletLCD::requestColors(uint8_t start, uint8_t count){
 	}
 }
 
+int8_t AmuletLCD::setString(uint8_t loc, const char * str){
+	uint8_t command[MAX_STRING_LENGTH] = {_AMULET_ADDRESS, _SET_STRING, loc, 0};
+	uint16_t len = strlen(str);
+	uint16_t i = 3, j = 0;
+	while (len > 0){
+		command[i++] = str[j++];
+		len--;
+	}
+	command[i++] = 0;
+	appendCRC(command,i);
+	Serial.write(command,i+2);
+	
+}
 /**
 * Utility function for all blocking master messages.
 * Will handle timeouts and retries.
@@ -700,7 +717,9 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 	uint8_t temp1, temp2, temp3;
 	//Serial.write(buf,bufLen); //DEBUG
   if(checkCRC(buf,bufLen)){ //first verify the CRC is good.
+
 	if (_reply){  
+
 		switch(buf[1]){
 		  case _GET_BYTE:
 			_Bytes[buf[2]] = buf[3];
@@ -717,12 +736,11 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			_GetColorReply = true;
 			break;
 		  case _GET_BYTE_ARRAY:
-			
 		    //start = buf[2]; already done above
 			//count = buf[3]; already done above
 			buf += 4;//increment the buffer pointer to the first valid data
 			arrayPtr = _Bytes + start;
-			if (((uint16_t)start + count) < 255){
+			if (((uint16_t)start + count) < _BytesLength){ //make sure new array fits into local buffer.
 				while(count){
 					*arrayPtr++ = *buf++;
 					count--;
@@ -738,7 +756,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			//count = buf[3]; already done above
 			buf += 4;//increment the buffer pointer to the first valid data
 			arrayPtr = ((uint8_t *)_Words) + (start*2);  //words are 2 bytes each
-			if (((uint16_t)start + count) < 255){
+			if (((uint16_t)start + count) < _WordsLength){ //make sure new array fits into local buffer.
 				while(count){  //copy array, swapping byte order
 					temp1 = *buf++;
 					*arrayPtr++ = *buf++;
@@ -756,7 +774,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			//count = buf[3]; already done above
 			buf += 4;//increment the buffer pointer to the first valid data
 			arrayPtr = ((uint8_t *)_Colors) + (start*4);  //colors are 4 bytes each
-			if (((uint16_t)start + count) < 255){
+			if (((uint16_t)start + count) < _ColorsLength){ //make sure new array fits into local buffer.
 				while(count){  //copy array, swapping byte order
 					temp1 = *buf++;
 					temp2 = *buf++;
