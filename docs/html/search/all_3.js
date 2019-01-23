@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['function',['function',['../struct_r_p_c___entry.html#a6c273b9607dd8639dc02a6ad9e66853d',1,'RPC_Entry']]],
-  ['functionpointer',['functionPointer',['../_amulet_l_c_d_8h.html#accaf3afee8fbefe1de6be69d1caaec44',1,'AmuletLCD.h']]]
+  ['callscript',['callScript',['../class_amulet_l_c_d.html#a847df28db2689eca06d8a621f8d9ea5a',1,'AmuletLCD::callScript(const char *fname, uint8_t waitForResponse)'],['../class_amulet_l_c_d.html#a78ad435e49544b29d41d98fce75c0e62',1,'AmuletLCD::callScript(const char *fname)']]]
 ];

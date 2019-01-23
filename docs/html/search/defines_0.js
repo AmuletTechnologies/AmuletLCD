@@ -17,6 +17,7 @@ var searchData=
   ['_5fget_5fword',['_GET_WORD',['../_amulet_l_c_d_8h.html#acd4e4002b3e715b8e86935cfc9a96fc9',1,'AmuletLCD.h']]],
   ['_5fget_5fword_5farray',['_GET_WORD_ARRAY',['../_amulet_l_c_d_8h.html#ac5ed287f298995cf67b84838d8a57268',1,'AmuletLCD.h']]],
   ['_5fhost_5faddress',['_HOST_ADDRESS',['../_amulet_l_c_d_8h.html#aa6045f3a2660609778453a5800b15932',1,'AmuletLCD.h']]],
+  ['_5finvoke_5fgemscript',['_INVOKE_GEMSCRIPT',['../_amulet_l_c_d_8h.html#ab32a18ea48cfe08add50e55d69653812',1,'AmuletLCD.h']]],
   ['_5finvoke_5frpc',['_INVOKE_RPC',['../_amulet_l_c_d_8h.html#a3899513c881f82ad7c2f2959a500e991',1,'AmuletLCD.h']]],
   ['_5fparse_5fopcode',['_PARSE_OPCODE',['../_amulet_l_c_d_8h.html#a910e0e80fc686910302bc9443f4b5c08',1,'AmuletLCD.h']]],
   ['_5frecieve_5fbegin',['_RECIEVE_BEGIN',['../_amulet_l_c_d_8h.html#adf7421fe0c242d7b33fc99a880af09bf',1,'AmuletLCD.h']]],
@@ -28,6 +29,9 @@ var searchData=
   ['_5fset_5fword',['_SET_WORD',['../_amulet_l_c_d_8h.html#ad4a5e53c7e9dfb6e2d685d264df8cad7',1,'AmuletLCD.h']]],
   ['_5fset_5fword_5farray',['_SET_WORD_ARRAY',['../_amulet_l_c_d_8h.html#a1e1796c6730c45f39b192964c0d48ea7',1,'AmuletLCD.h']]],
   ['_5fstatic_5flength',['_STATIC_LENGTH',['../_amulet_l_c_d_8h.html#a0443289a1f2588d6850924dea326e3fe',1,'AmuletLCD.h']]],
-  ['_5fvariable_5flength_5farray',['_VARIABLE_LENGTH_ARRAY',['../_amulet_l_c_d_8h.html#a1d13b59559b4a31cfeda9bf412676d8d',1,'AmuletLCD.h']]],
-  ['_5fvariable_5flength_5fstring',['_VARIABLE_LENGTH_STRING',['../_amulet_l_c_d_8h.html#acbb179e6b1cc3407bfd8b87b163fd84d',1,'AmuletLCD.h']]]
+  ['_5fvariable_5flength_5farray_5faddr1',['_VARIABLE_LENGTH_ARRAY_ADDR1',['../_amulet_l_c_d_8h.html#ae195f750468f6e8303f835826750c3a0',1,'AmuletLCD.h']]],
+  ['_5fvariable_5flength_5farray_5faddr2',['_VARIABLE_LENGTH_ARRAY_ADDR2',['../_amulet_l_c_d_8h.html#a006dd69c0d9209652395e8050578edb6',1,'AmuletLCD.h']]],
+  ['_5fvariable_5flength_5fstring',['_VARIABLE_LENGTH_STRING',['../_amulet_l_c_d_8h.html#acbb179e6b1cc3407bfd8b87b163fd84d',1,'AmuletLCD.h']]],
+  ['_5fvariable_5flength_5fstring_5faddr1',['_VARIABLE_LENGTH_STRING_ADDR1',['../_amulet_l_c_d_8h.html#ab04217e833d01ce19d27baec0ec449c1',1,'AmuletLCD.h']]],
+  ['_5fvariable_5flength_5fstring_5faddr2',['_VARIABLE_LENGTH_STRING_ADDR2',['../_amulet_l_c_d_8h.html#adcd794b7f373fc245c81606e743c0ffc',1,'AmuletLCD.h']]]
 ];

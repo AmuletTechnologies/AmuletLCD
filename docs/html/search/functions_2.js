@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['getbyte',['getByte',['../class_amulet_l_c_d.html#a64147b42fb4da964a8035cc754b21b3a',1,'AmuletLCD']]],
-  ['getcolor',['getColor',['../class_amulet_l_c_d.html#a5ee5efb0c43aefba62370bfecd56d775',1,'AmuletLCD']]],
-  ['getword',['getWord',['../class_amulet_l_c_d.html#a141030e6d0b6dcc3c39dbbee9d6e5907',1,'AmuletLCD']]]
+  ['callscript',['callScript',['../class_amulet_l_c_d.html#a847df28db2689eca06d8a621f8d9ea5a',1,'AmuletLCD::callScript(const char *fname, uint8_t waitForResponse)'],['../class_amulet_l_c_d.html#a78ad435e49544b29d41d98fce75c0e62',1,'AmuletLCD::callScript(const char *fname)']]]
 ];

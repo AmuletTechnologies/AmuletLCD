@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['getbyte',['getByte',['../class_amulet_l_c_d.html#a64147b42fb4da964a8035cc754b21b3a',1,'AmuletLCD']]],
-  ['getcolor',['getColor',['../class_amulet_l_c_d.html#a5ee5efb0c43aefba62370bfecd56d775',1,'AmuletLCD']]],
-  ['getword',['getWord',['../class_amulet_l_c_d.html#a141030e6d0b6dcc3c39dbbee9d6e5907',1,'AmuletLCD']]]
+  ['function',['function',['../struct_r_p_c___entry.html#a6c273b9607dd8639dc02a6ad9e66853d',1,'RPC_Entry']]],
+  ['functionpointer',['functionPointer',['../_amulet_l_c_d_8h.html#accaf3afee8fbefe1de6be69d1caaec44',1,'AmuletLCD.h']]]
 ];

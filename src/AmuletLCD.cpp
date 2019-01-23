@@ -21,6 +21,7 @@ AmuletLCD::AmuletLCD(){
 	_retries = 11;
 	_Timeout_ms = 200;
 	_config = SERIAL_8N1;
+    _ea = 0;
 }
 
 /**
@@ -37,16 +38,23 @@ void AmuletLCD::begin(uint32_t baud){
 * See http://www.arduino.cc/en/Serial/Begin for valid configuration Macros.
 * @param baud uint32_t the communications rate specified in bits per second, default 115200
 * @param config uint8_t Macro that sets data, parity, and stop bits, default SERIAL_8N1
+* @param extended_address uint8_t controls number of address bytes in messages. 0 for 1 address byte, nonzero for 2 bytes. set nonzero to support >256 byte, word, or color variables.
 */
-void AmuletLCD::begin(uint32_t baud, uint8_t config){
+void AmuletLCD::begin(uint32_t baud, uint8_t config, uint8_t extended_address){
 	_baud = baud;
 	_config = config;
+    if (extended_address)
+        _ea = 1; //only 1 and 0 are valid.
+    else
+        _ea = 0;
 	#ifdef ESP8266
-	begin(baud, (SerialConfig)config);
+	Serial.begin(baud, (SerialConfig)config);
 	#else
 	Serial.begin(baud, config);
 	#endif
 }
+
+
 
 /**
 * Set up array for use with Amulet commands: Amulet:UARTn.byte(x).value()/setValue()
@@ -110,10 +118,10 @@ void AmuletLCD::callRPC(uint8_t index){
 /**
 * Read the Byte from the local array, which may or may not match the state of Amulet InternalRAM.Byte memory
 * Expecting either the Amulet Display to send a master command to set this value, or you can use requestByte or requestBytes to update the values before reading.
-* @param loc uint8_t the index into the local array
+* @param loc uint16_t the index into the local array
 * @return uint8_t the indexed value of local buffer if loc < _BytesLength. Otherwise, 0;
 */
-uint8_t AmuletLCD::getByte(uint8_t loc){
+uint8_t AmuletLCD::getByte(uint16_t loc){
 	if (loc < _BytesLength)
 		return _Bytes[loc];
 	else{
@@ -125,16 +133,26 @@ uint8_t AmuletLCD::getByte(uint8_t loc){
 /**
 * Request the Byte from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same index.
-* @param loc uint8_t the index into the Amulet and local array.
+* @param loc uint16_t the index into the Amulet and local array.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestByte(uint8_t loc)
+uint8_t AmuletLCD::requestByte(uint16_t loc)
 {
-	if(Serial.availableForWrite() >= 5){
+	if(Serial.availableForWrite() >= 5+_ea){
 		_GetByteReply = false;
-		uint8_t command[5] = {_AMULET_ADDRESS, _GET_BYTE, loc, 0, 0};
-		appendCRC(command,3);
-		return send_command_blocking(command, 5);
+        uint8_t command[6] = {_AMULET_ADDRESS, _GET_BYTE, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 	else{
 		setError();
@@ -145,16 +163,27 @@ uint8_t AmuletLCD::requestByte(uint8_t loc)
 /**
 * Request the Byte Array from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same indices.
-* @param start uint8_t the first index into the Amulet and local array.
+* @param start uint16_t the first index into the Amulet and local array.
 * @param count uint8_t the number of variables requested.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestBytes(uint8_t start, uint8_t count){
-	if(Serial.availableForWrite() >= 6){
+uint8_t AmuletLCD::requestBytes(uint16_t start, uint8_t count){
+	if(Serial.availableForWrite() >= 6+_ea){
 		_GetBytesReply = false;
-		uint8_t command[6] = {_AMULET_ADDRESS, _GET_BYTE_ARRAY, start, count, 0, 0};
-		appendCRC(command,4);
-		return send_command_blocking(command, 6);
+        uint8_t command[7] = {_AMULET_ADDRESS, _GET_BYTE_ARRAY, 0, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(start >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(start & 0xFF);
+        command[i++] = count;
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 	else{
 		setError();
@@ -164,48 +193,60 @@ uint8_t AmuletLCD::requestBytes(uint8_t start, uint8_t count){
 
 /**
 * Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory and wait for the response
-* @param loc uint8_t the index into the Amulet Byte array
+* @param loc uint16_t the index into the Amulet Byte array
 * @param value uint8_t the value to set
 * @return int8_t true if correct response was received, false otherwise
 */
-int8_t AmuletLCD::setByte(uint8_t loc, uint8_t value){
+int8_t AmuletLCD::setByte(uint16_t loc, uint8_t value){
 	setByte(loc, value, true);
 }
 
 /**
 * Send out a serial command to set the Byte in the Amulet InternalRAM.Byte memory
 * can optionally wait for response or just get out
-* @param loc uint8_t the index into the Amulet Byte array
+* @param loc uint16_t the index into the Amulet Byte array
 * @param value uint8_t the value to set
 * @param waitForResponse uint8_t true will block until response is received or timeout occurs
 * @return int8_t true if correct response was received or skipped, false otherwise
 */
-int8_t AmuletLCD::setByte(uint8_t loc, uint8_t value, uint8_t waitForResponse){
-	if(Serial.availableForWrite() >= 6){
-		uint8_t command[6] = {_AMULET_ADDRESS, _SET_BYTE, loc, value, 0, 0};
-		appendCRC(command,4);
-		if (waitForResponse){
-			_SetByteReply = false;
-			return send_command_blocking(command, 6);
-		}
-		else{
-			Serial.write(command,6);
-			return true;
-		}
-	}
-	else{
-		setError();
-		return false;
-	}
+int8_t AmuletLCD::setByte(uint16_t loc, uint8_t value, uint8_t waitForResponse){
+    if(Serial.availableForWrite() >= 6+_ea){
+        uint8_t command[7] = {_AMULET_ADDRESS, _SET_BYTE, 0, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        command[i++] = value;
+        
+        appendCRC(command,i);
+        i+=2;
+        if (waitForResponse){
+            _SetByteReply = false;
+            return send_command_blocking(command, i);
+        }
+        else{
+            Serial.write(command,i);
+            return true;
+        }
+    }
+    else{
+        setError();
+        return false;
+    }
 }
 
 /**
 * Read the Word from the local array, which may or may not match the state of Amulet InternalRAM.Word memory
 * Expecting either the Amulet Display to send a master command to set this value, or you can use requestWord or requestWords to update the values before reading.
-* @param loc uint8_t the index into the local _Words array
+* @param loc uint16_t the index into the local _Words array
 * @return uint16_t the indexed value of local buffer, if loc < _WordsLength. Otherwise, 0;
 */
-uint16_t AmuletLCD::getWord(uint8_t loc){
+uint16_t AmuletLCD::getWord(uint16_t loc){
 	if (loc < _WordsLength)
 		return _Words[loc];
 	else{
@@ -217,41 +258,63 @@ uint16_t AmuletLCD::getWord(uint8_t loc){
 /**
 * Request the Word from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same index.
-* @param loc uint8_t the index into the Amulet and local array.
+* @param loc uint16_t the index into the Amulet and local array.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestWord(uint8_t loc){
-	if(Serial.availableForWrite() >= 5){
+uint8_t AmuletLCD::requestWord(uint16_t loc){
+	if(Serial.availableForWrite() >= 5+_ea){
 		_GetWordReply = false;
-		uint8_t command[5] = {_AMULET_ADDRESS, _GET_WORD, loc, 0, 0};
-		appendCRC(command,3);
-		return send_command_blocking(command, 5);
+        uint8_t command[6] = {_AMULET_ADDRESS, _GET_WORD, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 }
 
 /**
 * Request the Word Array from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same indices.
-* @param start uint8_t the first index into the Amulet and local array.
+* @param start uint16_t the first index into the Amulet and local array.
 * @param count uint8_t the number of variables requested.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestWords(uint8_t start, uint8_t count){
-	if(Serial.availableForWrite() >= 6){
+uint8_t AmuletLCD::requestWords(uint16_t start, uint8_t count){
+	if(Serial.availableForWrite() >= 6+_ea){
 		_GetWordsReply = false;
-		uint8_t command[6] = {_AMULET_ADDRESS, _GET_WORD_ARRAY, start, count, 0, 0};
-		appendCRC(command,4);
-		return send_command_blocking(command, 6);
+        uint8_t command[7] = {_AMULET_ADDRESS, _GET_WORD_ARRAY, 0, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(start >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(start & 0xFF);
+        command[i++] = count;
+        
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 }
 
 /**
 * Send out a serial command to set the Word in the Amulet InternalRAM.Word memory and wait for a response
-* @param loc uint8_t the index into the Amulet word array
+* @param loc uint16_t the index into the Amulet word array
 * @param value uint16_t the value to set
 * @return int8_t true if response was received, false otherwise
 */
-int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value){
+int8_t AmuletLCD::setWord(uint16_t loc, uint16_t value){
 	return setWord(loc, value, true);
 }
 
@@ -259,21 +322,34 @@ int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value){
 /**
 * Send out a serial command to set the Word in the Amulet InternalRAM.Word memory
 * can optionally wait for response or just get out
-* @param loc uint8_t the index into the Amulet Word array
+* @param loc uint16_t the index into the Amulet Word array
 * @param value uint16_t the value to set
 * @param waitForResponse uint8_t true will block until response is received or timeout occurs
 * @return int8_t true if correct response was received or skipped, false otherwise
 */
-int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value, uint8_t waitForResponse){
-	if(Serial.availableForWrite() >= 7){
-		uint8_t command[7] = {_AMULET_ADDRESS,_SET_WORD,loc, uint8_t((value >> 8) & 0xFF), uint8_t(value & 0xFF), 0, 0};
-		appendCRC(command,5);
+int8_t AmuletLCD::setWord(uint16_t loc, uint16_t value, uint8_t waitForResponse){
+	if(Serial.availableForWrite() >= 7+_ea){
+		uint8_t command[8] = {_AMULET_ADDRESS,_SET_WORD,0,0,0,0,0,0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        command[i++] = (uint8_t)(value >> 8);
+        command[i++] = (uint8_t)(value & 0xFF);
+        
+		appendCRC(command,i);
+        i+=2;
 		if (waitForResponse){
 			_SetWordReply = false;
-			return send_command_blocking(command, 7);
+			return send_command_blocking(command, i);
 		}
 		else{
-			Serial.write(command,7);
+			Serial.write(command,i);
 			return true;
 		}
 	}
@@ -286,32 +362,47 @@ int8_t AmuletLCD::setWord(uint8_t loc, uint16_t value, uint8_t waitForResponse){
 
 /**
 * Send out a serial command to set the Color in the Amulet InternalRAM.Color memory and wait for a response
-* @param loc uint8_t the index into the Amulet color array
+* @param loc uint16_t the index into the Amulet color array
 * @param value uint32_t the value to set
 * @return int8_t true if correct response was received, false otherwise
 */
-int8_t AmuletLCD::setColor(uint8_t loc, uint32_t value){
+int8_t AmuletLCD::setColor(uint16_t loc, uint32_t value){
 	return setColor(loc, value, true);
 }
 
 /**
 * Send out a serial command to set the Color in the Amulet InternalRAM.Color memory
 * can optionally wait for response or just get out
-* @param loc uint8_t the index into the Amulet Color array
+* @param loc uint16_t the index into the Amulet Color array
 * @param value uint32_t the value to set
 * @param waitForResponse uint8_t true will block until response is received or timeout occurs
 * @return int8_t true if correct response was received or skipped, false otherwise
 */
-int8_t AmuletLCD::setColor(uint8_t loc, uint32_t value, uint8_t waitForResponse){
-	if(Serial.availableForWrite() >= 9){
-		uint8_t command[9] = {_AMULET_ADDRESS,_SET_COLOR,loc, uint8_t((value >> 24) & 0xFF), uint8_t((value >> 16) & 0xFF), uint8_t((value >> 8) & 0xFF), uint8_t(value & 0xFF), 0, 0};
-		appendCRC(command,7);
+int8_t AmuletLCD::setColor(uint16_t loc, uint32_t value, uint8_t waitForResponse){
+	if(Serial.availableForWrite() >= 9+_ea){
+        uint8_t command[10] = {_AMULET_ADDRESS,_SET_COLOR};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        command[i++] = (uint8_t) (value >> 24);
+        command[i++] = (uint8_t)((value >> 16) & 0xFF);
+        command[i++] = (uint8_t)((value >> 8)  & 0xFF);
+        command[i++] = (uint8_t) (value        & 0xFF);
+        
+		appendCRC(command,i);
+        i+=2;
 		if (waitForResponse){
 			_SetColorReply = false;
-			return send_command_blocking(command, 9);
+			return send_command_blocking(command, i);
 		}
 		else{
-			Serial.write(command,9);
+			Serial.write(command,i);
 			return true;
 		}
 	}
@@ -325,10 +416,10 @@ int8_t AmuletLCD::setColor(uint8_t loc, uint32_t value, uint8_t waitForResponse)
 /**
 * Read the Color from the local array, which may or may not match the state of Amulet InternalRAM.Color memory
 * Expecting either the Amulet Display to send a master command to set this value, or you can use requestColor or requestColors to update the values before reading.
-* @param loc uint8_t the index into the local Color array
+* @param loc uint16_t the index into the local Color array
 * @return uint16_t the indexed value of local buffer, if loc < _ColorsLength. Otherwise, 0;
 */
-uint32_t AmuletLCD::getColor(uint8_t loc){
+uint32_t AmuletLCD::getColor(uint16_t loc){
 	if (loc < _ColorsLength)
 		return _Colors[loc];
 	else{
@@ -341,15 +432,25 @@ uint32_t AmuletLCD::getColor(uint8_t loc){
 /**
 * Request the Color from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same index.
-* @param loc uint8_t the index into the Amulet and local array.
+* @param loc uint16_t the index into the Amulet and local array.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestColor(uint8_t loc){
-	if(Serial.availableForWrite() >= 5){
+uint8_t AmuletLCD::requestColor(uint16_t loc){
+	if(Serial.availableForWrite() >= 5+_ea){
 		_GetColorReply = false;
-		uint8_t command[5] = {_AMULET_ADDRESS, _GET_COLOR, loc, 0, 0};
-		appendCRC(command,3);
-		return send_command_blocking(command, 5);
+        uint8_t command[6] = {_AMULET_ADDRESS, _GET_COLOR, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 }
 
@@ -357,37 +458,148 @@ uint8_t AmuletLCD::requestColor(uint8_t loc){
 /**
 * Request the Color Array from Amulet Display, and wait for a response.
 * Copy the response into the local array at the same indices.
-* @param start uint8_t the first index into the Amulet and local array.
+* @param start uint16_t the first index into the Amulet and local array.
 * @param count uint8_t the number of variables requested.
 * @return int8_t true if correct response was received, false otherwise
 */
-uint8_t AmuletLCD::requestColors(uint8_t start, uint8_t count){
-	if(Serial.availableForWrite() >= 6){
+uint8_t AmuletLCD::requestColors(uint16_t start, uint8_t count){
+	if(Serial.availableForWrite() >= 6+_ea){
 		_GetColorsReply = false;
-		uint8_t command[6] = {_AMULET_ADDRESS, _GET_COLOR_ARRAY, start, count, 0, 0};
-		appendCRC(command,4);
-		return send_command_blocking(command, 6);
+        uint8_t command[7] = {_AMULET_ADDRESS, _GET_COLOR};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(start >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(start & 0xFF);
+        command[i++] = count;
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
 	}
 }
 
-int8_t AmuletLCD::setString(uint8_t loc, const char * str){
-	uint8_t command[MAX_STRING_LENGTH] = {_AMULET_ADDRESS, _SET_STRING, loc, 0};
-	uint16_t len = strlen(str);
-	uint16_t i = 3, j = 0;
-	while (len > 0){
-		command[i++] = str[j++];
-		len--;
-	}
-	command[i++] = 0;
-	appendCRC(command,i);
-	Serial.write(command,i+2);
-	
+/**
+* Send out a serial command to set a String in the Amulet InternalRAM.String memory
+* can optionally wait for response or just get out as soon as serial buffer populated
+* @param start uint16_t the first index into the Amulet array.
+* @param str const char * the source string
+* @param waitForResponse uint8_t true will block until response is received or timeout occurs
+* @return int8_t true if correct response was received, false otherwise
+*/
+int8_t AmuletLCD::setString(uint16_t loc, const char * str, uint8_t waitForResponse){
+    uint16_t len = strlen(str);
+    if(Serial.availableForWrite() >= MAX_STRING_LENGTH+5+_ea){
+        _SetStringReply = false;
+        uint16_t i, j = 0;
+        //command = slave address + opcode + 8/16bit address + string + null + CRC
+        uint8_t command[MAX_STRING_LENGTH+6] = {_AMULET_ADDRESS, _SET_STRING, 0};
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i=3;
+        }
+        else {
+            i=2;
+        }
+        command[i++] = (uint8_t)(loc & 0xFF);
+        //sanity check to not overflow buffer
+        if (MAX_STRING_LENGTH < len)
+            len = MAX_STRING_LENGTH;
+        
+        while (len > 0){
+            command[i++] = str[j++];
+            len--;
+        }
+        command[i++] = 0;
+        appendCRC(command,i);
+        i+=2;
+        
+        if (waitForResponse){
+            return send_command_blocking(command, i);
+        }
+        else{
+            Serial.write(command,i);
+            return true;
+        }
+    }
 }
+
+/**
+* Send out a serial command to set a String in the Amulet InternalRAM.String memory
+* Will always wait for response if there is room in the serial buffer.
+* @param start uint16_t the first index into the Amulet array.
+* @param str const char * the source string
+* @return int8_t true if correct response was received, false otherwise
+*/
+int8_t AmuletLCD::setString(uint16_t loc, const char * str){
+    setString(loc, str, 1);
+}
+
+/**
+* Send out a serial command to call a GEMscript public function that exists on the current page.
+* This includes "@" functions like "@load" and "@init" that do not require a parameter.
+* It can optionally wait for response or just get out as soon as serial buffer populated
+* @param str const char * the name of the script to call, max 32 characters
+* @param waitForResponse uint8_t true will block until response is received or timeout occurs
+* @return int8_t true if correct response was received or a response was not requested, false otherwise
+*/
+int8_t AmuletLCD::callScript(const char* fname, uint8_t waitForResponse){
+    if(Serial.availableForWrite() >= 37){
+        _scriptReply = INVALID_SCRIPT_REPLY;
+        _InvokeGEMscriptReply = false;
+        //longest GEMscript method name is 32 bytes,  + null, slave addr, opcode and 2-byte CRC = 37
+        uint8_t command[37] = {_AMULET_ADDRESS, _INVOKE_GEMSCRIPT, 0}; 
+        uint8_t i=2;
+        if (strlen(fname) > 32)
+            return -1;
+        while(*fname !=0)
+            command[i++] = *fname++;
+        
+        command[i++] = 0;
+        appendCRC(command,i);
+        i+=2;
+        if (waitForResponse){
+            return send_command_blocking(command, i);
+        }
+        else{
+            Serial.write(command,i);
+            return true;
+        }
+    }
+    else{
+        setError();
+        return false;
+    }
+}
+
+/**
+* Send out a serial command to call a GEMscript public function that exists on the current page.
+* This includes "@" functions like "@load" and "@init" that do not require a parameter.
+* It will wait for a response, whose value can be retrieved by calling scriptReply
+* @param str const char * the name of the script to call, max 32 characters
+* @param waitForResponse uint8_t true will block until response is received or timeout occurs
+* @return int8_t true if correct response was received or a response was not requested, false otherwise
+*/
+int8_t AmuletLCD::callScript(const char* fname){
+    return callScript(fname, 1);
+}
+
+/**
+* returns the value of the last callScript method reply.
+* @return int32_t valid only after reply is received, so do not depend on this value upon return of callScript if waitForResponse was not true.
+*/
+int32_t AmuletLCD::scriptReply(){
+    return _scriptReply;
+}
+
 /**
 * Utility function for all blocking master messages.
 * Will handle timeouts and retries.
-* @param start uint8_t the first index into the Amulet and local array.
-* @param count uint8_t the number of variables requested.
+* @param command uint8_t * the array containing the command to send.
+* @param length uint16_t the number of bytes to send
 * @return int8_t true if correct response was received, false otherwise
 */
 uint8_t AmuletLCD::send_command_blocking(uint8_t * command, uint16_t length)
@@ -435,7 +647,10 @@ uint8_t AmuletLCD::send_command_blocking(uint8_t * command, uint16_t length)
 					if (_SetWordReply)
 						return true;
 					break;
-//				case _SET_STRING:
+				case _SET_STRING:
+                    if (_SetStringReply)
+						return true;
+					break;
 				case _SET_COLOR:
 					if (_SetColorReply)
 						return true;
@@ -450,6 +665,10 @@ uint8_t AmuletLCD::send_command_blocking(uint8_t * command, uint16_t length)
 					break;
 				case _SET_COLOR_ARRAY:
 					if (_SetColorsReply)
+						return true;
+					break;
+                case _INVOKE_GEMSCRIPT:
+					if (_InvokeGEMscriptReply)
 						return true;
 					break;
 				default:
@@ -518,70 +737,88 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
   static int16_t count; //count of bytes left
   switch(_UART_State){
     case _RECIEVE_BEGIN:   //begin - look for a valid address
-      if ((b == _HOST_ADDRESS)||(b == _AMULET_ADDRESS)){
-        _UART_State = _PARSE_OPCODE;
-        _RxBuffer[_RxBufferLength++] = b;
-        i = 1;
-		if (b == _AMULET_ADDRESS)
-          _reply = true;  //this is a reply to a previous Arduino-as-master Get or Set command.
-	    else
-          _reply = false; //this is a new Amulet-as-master command
-      }  
-      //else{} //stay in this state
-      break;
+        if ((b == _HOST_ADDRESS)||(b == _AMULET_ADDRESS)) {
+            _UART_State = _PARSE_OPCODE;
+            _RxBuffer[_RxBufferLength++] = b;
+            i = 1;
+        if (b == _AMULET_ADDRESS)
+            _reply = true;  //this is a reply to a previous Arduino-as-master Get or Set command.
+        else
+            _reply = false; //this is a new Amulet-as-master command
+        }  
+        //else{} //stay in this state
+        break;
     case _PARSE_OPCODE:               //parse opcode to determine next state
-      count = recieve_OpcodeParser(b);  	  
-      if(count == -1){               //invalid opcode, reset state machine
-        _RxBufferLength = 0;
-        _UART_State = _RECIEVE_BEGIN;
-      }
-	  else if(count == -2){           //Reply to SET cmd
-		count = 0; //there is no data
-        _RxBuffer[_RxBufferLength++] = b;
-		_UART_State = _GET_CRC1;
-	  }
-      else if(count == 0){           //variable length array or string
-        _RxBuffer[_RxBufferLength++] = b;
-        if(b == _SET_STRING){
-          _UART_State = _VARIABLE_LENGTH_STRING;
+        count = recieve_OpcodeParser(b);  	  
+        if (count == -1) {               //invalid opcode, reset state machine
+            _RxBufferLength = 0;
+            _UART_State = _RECIEVE_BEGIN;
         }
-        else{
-          _UART_State = _VARIABLE_LENGTH_ARRAY;
-        }      
-      }
-      else if(count > 0){            //static length command
-        _RxBuffer[_RxBufferLength++] = b;
-        _UART_State = _STATIC_LENGTH;
-      }   
-      break;
+        else if (count == -2) {           //Reply to SET cmd
+            count = 0; //there is no data
+            _RxBuffer[_RxBufferLength++] = b;
+            _UART_State = _GET_CRC1;
+        }
+        else if (count == 0) {           //variable length array or string
+            _RxBuffer[_RxBufferLength++] = b;
+            if (b == _SET_STRING) {
+                if (_ea)
+                    _UART_State = _VARIABLE_LENGTH_STRING_ADDR1;
+                else
+                    _UART_State = _VARIABLE_LENGTH_STRING_ADDR2;
+            }
+            else{
+                if (_ea)
+                    _UART_State = _VARIABLE_LENGTH_ARRAY_ADDR1;
+                else
+                    _UART_State = _VARIABLE_LENGTH_ARRAY_ADDR2;
+            }      
+        }
+        else if (count > 0) {            //static length command
+            _RxBuffer[_RxBufferLength++] = b;
+            _UART_State = _STATIC_LENGTH;
+        }   
+        break;
     case _STATIC_LENGTH:              //fixed length command. increment i until count bytes recieved, then get CRC
-        if(i < count){
-          _RxBuffer[_RxBufferLength++] = b;
-          i++;
+        if (i < count) {
+            _RxBuffer[_RxBufferLength++] = b;
+            i++;
         }
-        else{
-          _RxBuffer[_RxBufferLength++] = b;
-          _UART_State = _GET_CRC1;
+        else {
+            _RxBuffer[_RxBufferLength++] = b;
+            _UART_State = _GET_CRC1;
         }
-      break;
-    case _VARIABLE_LENGTH_ARRAY:  //array command, next byte contains starting address
-      _RxBuffer[_RxBufferLength++] = b;
-      _UART_State = _ARRAY_START;
-      break;
+        break;
+    case _VARIABLE_LENGTH_ARRAY_ADDR1:  //array command, next byte contains starting address
+        _RxBuffer[_RxBufferLength++] = b;
+        _UART_State = _VARIABLE_LENGTH_ARRAY_ADDR2;
+        break;
+    case _VARIABLE_LENGTH_ARRAY_ADDR2:  //array command, next byte contains starting address
+        _RxBuffer[_RxBufferLength++] = b;
+        _UART_State = _ARRAY_START;
+        break;
+    case _VARIABLE_LENGTH_STRING_ADDR1:
+        _RxBuffer[_RxBufferLength++] = b;
+        _UART_State = _VARIABLE_LENGTH_STRING_ADDR2;
+        break;
+    case _VARIABLE_LENGTH_STRING_ADDR2:
+        _RxBuffer[_RxBufferLength++] = b;
+        _UART_State = _VARIABLE_LENGTH_STRING;
+        break;
     case _VARIABLE_LENGTH_STRING:
-      if(b != 0x00 || count == 0){
-        _RxBuffer[_RxBufferLength++] = b;
-        count++;
-      }
-      else{
-        _RxBuffer[_RxBufferLength++] = b;
-        count++;
-        _UART_State = _GET_CRC1;
-      }
-      break;
+        if (b != 0x00 || count == 0) {
+            _RxBuffer[_RxBufferLength++] = b;
+            count++;
+        }
+        else {
+            _RxBuffer[_RxBufferLength++] = b;
+            count++;
+            _UART_State = _GET_CRC1;
+        }
+        break;
     case _ARRAY_START:
       _RxBuffer[_RxBufferLength++] = b;
-      switch(_RxBuffer[1]){              //calc # of bytes before CRC
+      switch(_RxBuffer[1]) {              //calc # of bytes before CRC
         case _SET_BYTE_ARRAY:
 		case _GET_BYTE_ARRAY:  //should only get here when receiving a reply, not a master message from Amulet.
           count = b;
@@ -595,7 +832,7 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
           count = 4 * b;
           break;
       }
-      if(count > 0){
+      if (count > 0) {
         _UART_State = _ARRAY_DATA;
       }
       else{
@@ -603,7 +840,7 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
       }
       break;
     case _ARRAY_DATA:
-      if(i < count){
+      if (i < count) {
         _RxBuffer[_RxBufferLength++] = b;
         i++;
       }
@@ -626,7 +863,7 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
       _UART_State = 0;
       _RxBufferLength = 0;
       i = 0;
-  }  
+    }  
 }
 
 /**
@@ -636,46 +873,49 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
 * @return uint8_t The number of bytes left before the CRC
 */
 int8_t AmuletLCD::recieve_OpcodeParser(uint8_t b){
-  if (_reply)
-  {
-	  switch (b)
-	  {
-		  case _GET_BYTE:
-            return 2;
-          case _GET_WORD:
-            return 3;
-          case _GET_COLOR:
-            return 5;
-		  case _GET_BYTE_ARRAY:
-		  case _GET_WORD_ARRAY:
-		  case _GET_COLOR_ARRAY:
-			return 0;
-          case _SET_BYTE:
-          case _SET_WORD:
-          case _SET_COLOR:
-          case _SET_STRING:
-			return -2; //No packet data follows opcode in a reply to a SET command, just CRC 
-	  }
-  }
-  //else - not a reply
-  if(b==_GET_BYTE || b==_GET_WORD || b==_GET_STRING || b==_GET_COLOR || b==_GET_LABEL|  b==_INVOKE_RPC){ 
-    return 1;
-  }
-  else if(b==_SET_BYTE || b==_GET_BYTE_ARRAY ||  b==_GET_WORD_ARRAY || b==_GET_COLOR_ARRAY){ //set: Byte. getarray: byte, word, color.
-    return 2;
-  }
-  else if(b==_SET_WORD){
-    return 3;
-  }
-  else if(b==_SET_COLOR){
-    return 5;
-  }
-  else if(b==_SET_STRING || b==_SET_BYTE_ARRAY || b==_SET_WORD_ARRAY || b==_SET_COLOR_ARRAY){  // variable length array
-    return 0;
-  }
-  else {   //invalid opcode. 
-    return -1; 
-  }
+    if (_reply)
+    {
+        switch (b)
+        {
+            case _GET_BYTE:
+                return 2+_ea;
+            case _GET_WORD:
+                return 3+_ea;
+            case _GET_COLOR:
+                return 5+_ea;
+            case _GET_BYTE_ARRAY:
+            case _GET_WORD_ARRAY:
+            case _GET_COLOR_ARRAY:
+                return 0+_ea;
+            case _SET_BYTE:
+            case _SET_WORD:
+            case _SET_COLOR:
+            case _SET_STRING:
+                return -2; //No packet data follows opcode in a reply to a SET command, just CRC 
+        }
+    }
+    //else - not a reply
+    if (b==_GET_BYTE || b==_GET_WORD || b==_GET_STRING || b==_GET_COLOR || b==_GET_LABEL) {
+        return 1+_ea;
+    }
+    if (b==_INVOKE_RPC){ 
+        return 1;
+    }
+    else if (b==_SET_BYTE || b==_GET_BYTE_ARRAY ||  b==_GET_WORD_ARRAY || b==_GET_COLOR_ARRAY){ //set: Byte. getarray: byte, word, color.
+        return 2+_ea;
+    }
+    else if (b==_SET_WORD){
+        return 3+_ea;
+    }
+    else if (b==_SET_COLOR){
+        return 5+_ea;
+    }
+    else if (b==_SET_STRING || b==_SET_BYTE_ARRAY || b==_SET_WORD_ARRAY || b==_SET_COLOR_ARRAY){  // variable length array
+        return 0;
+    }
+    else {   //invalid opcode. 
+        return -1; 
+    }
 }
 
 
@@ -812,6 +1052,10 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 		  case _SET_COLOR_ARRAY:
 		    _SetColorsReply = true;
 			break;
+          case _INVOKE_GEMSCRIPT:
+            _InvokeGEMscriptReply = true;
+            _scriptReply = ((long(buf[2]) << 24) | (long(buf[3]) << 16) | (long(buf[4]) << 8) | buf[5]);
+            break;
 		}
 	}
     else{
@@ -919,8 +1163,8 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			SetCmd_Reply(_SET_COLOR_ARRAY);
 			break;
 		  case _INVOKE_RPC:
-			callRPC(buf[2]);
 			SetCmd_Reply(_INVOKE_RPC);
+			callRPC(buf[2]);
 			break;
 		}
 	  }
