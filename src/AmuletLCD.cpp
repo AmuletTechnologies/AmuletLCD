@@ -465,7 +465,7 @@ uint8_t AmuletLCD::requestColor(uint16_t loc){
 uint8_t AmuletLCD::requestColors(uint16_t start, uint8_t count){
 	if(Serial.availableForWrite() >= 6+_ea){
 		_GetColorsReply = false;
-        uint8_t command[7] = {_AMULET_ADDRESS, _GET_COLOR};
+        uint8_t command[7] = {_AMULET_ADDRESS, _GET_COLOR_ARRAY};
         uint8_t i;
         if (_ea) {
             command[2] = (uint8_t)(start >> 8);
@@ -886,7 +886,7 @@ int8_t AmuletLCD::recieve_OpcodeParser(uint8_t b){
             case _GET_BYTE_ARRAY:
             case _GET_WORD_ARRAY:
             case _GET_COLOR_ARRAY:
-                return 0+_ea;
+                return 0;
             case _SET_BYTE:
             case _SET_WORD:
             case _SET_COLOR:
@@ -951,34 +951,36 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 	uint8_t _TxBufferLength = 0;
 	uint16_t returnCRC = 0;
 	uint8_t i = 0;
-	uint8_t start = buf[2];
-	uint8_t count = buf[3];
+	uint16_t start;
+	uint16_t count = buf[3+_ea];
 	uint8_t * arrayPtr;
 	uint8_t temp1, temp2, temp3;
+    if (_ea)
+        start = (buf[2] << 8) + buf[3];
+    else
+        start = buf[2];
 	//Serial.write(buf,bufLen); //DEBUG
   if(checkCRC(buf,bufLen)){ //first verify the CRC is good.
-
 	if (_reply){  
-
 		switch(buf[1]){
 		  case _GET_BYTE:
-			_Bytes[buf[2]] = buf[3];
+			_Bytes[start] = buf[3+_ea];
 			_GetByteReply = true;
 			break;
 		  case _GET_WORD:
-			_Words[buf[2]] = word(buf[3],buf[4]);
+			_Words[start] = word(buf[3+_ea],buf[4+_ea]);
 			_GetWordReply = true;
 			break;
 		  case _GET_STRING:
 			break;
 		  case _GET_COLOR:
-			_Colors[buf[2]] = ((long(buf[3]) << 24) | (long(buf[4]) << 16) | (long(buf[5]) << 8) | buf[6]);
+			_Colors[start] = ((long(buf[3+_ea]) << 24) | (long(buf[4+_ea]) << 16) | (long(buf[5+_ea]) << 8) | buf[6+_ea]);
 			_GetColorReply = true;
 			break;
 		  case _GET_BYTE_ARRAY:
 		    //start = buf[2]; already done above
 			//count = buf[3]; already done above
-			buf += 4;//increment the buffer pointer to the first valid data
+			buf += (4+_ea);//increment the buffer pointer to the first valid data
 			arrayPtr = _Bytes + start;
 			if (((uint16_t)start + count) < _BytesLength){ //make sure new array fits into local buffer.
 				while(count){
@@ -994,7 +996,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 		  case _GET_WORD_ARRAY:
 			//start = buf[2]; already done above
 			//count = buf[3]; already done above
-			buf += 4;//increment the buffer pointer to the first valid data
+			buf += (4+_ea);//increment the buffer pointer to the first valid data
 			arrayPtr = ((uint8_t *)_Words) + (start*2);  //words are 2 bytes each
 			if (((uint16_t)start + count) < _WordsLength){ //make sure new array fits into local buffer.
 				while(count){  //copy array, swapping byte order
@@ -1012,7 +1014,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 		  case _GET_COLOR_ARRAY:
 			//start = buf[2]; already done above
 			//count = buf[3]; already done above
-			buf += 4;//increment the buffer pointer to the first valid data
+			buf += (4+_ea);//increment the buffer pointer to the first valid data
 			arrayPtr = ((uint8_t *)_Colors) + (start*4);  //colors are 4 bytes each
 			if (((uint16_t)start + count) < _ColorsLength){ //make sure new array fits into local buffer.
 				while(count){  //copy array, swapping byte order
@@ -1066,23 +1068,38 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 		  case _GET_BYTE:
 			//_TxBuffer[0] = _HOST_ADDRESS;  //already set above, put here for clarity
 			//_TxBuffer[1] = _GET_BYTE;      //already set above, put here for clarity
-			_TxBuffer[2] = buf[2];
-			_TxBuffer[3] = _Bytes[buf[2]];
-			returnCRC= calcCRC(_TxBuffer,4);
-			_TxBuffer[4] = returnCRC & 0xFF;
-			_TxBuffer[5] = (returnCRC >> 8) & 0xFF;
-			Serial.write(_TxBuffer,6);
+            i=2;
+            if (_ea){
+                _TxBuffer[i++] = buf[2];
+                _TxBuffer[i++] = buf[3];
+            }
+            else {
+                _TxBuffer[i++] = buf[2];
+            }
+            _TxBuffer[i++] = _Bytes[start];
+			returnCRC= calcCRC(_TxBuffer,i);
+			_TxBuffer[i++] = returnCRC & 0xFF;
+			_TxBuffer[i++] = (returnCRC >> 8) & 0xFF;
+			Serial.write(_TxBuffer,i);
 			break;
 		  case _GET_WORD:
 			//_TxBuffer[0] = _HOST_ADDRESS;  //already set above, put here for clarity
 			//_TxBuffer[1] = _GET_WORD;      //already set above, put here for clarity
-			_TxBuffer[2] = buf[2];
-			_TxBuffer[3] = (_Words[buf[2]] >> 8) & 0xFF;  //MSB first for data
-			_TxBuffer[4] = _Words[buf[2]] & 0xFF;
-			returnCRC= calcCRC(_TxBuffer,5);
-			_TxBuffer[5] = returnCRC & 0xFF;             //LSB first for CRC
-			_TxBuffer[6] = (returnCRC >> 8) & 0xFF;
-			Serial.write(_TxBuffer,7);
+			i=2;
+            if (_ea){
+                _TxBuffer[i++] = buf[2];
+                _TxBuffer[i++] = buf[3];
+                
+            }
+            else {
+                _TxBuffer[i++] = buf[2];
+            }
+            _TxBuffer[i++] = (_Words[start] >> 8) & 0xFF;//MSB first for data
+			_TxBuffer[i++] = _Words[start] & 0xFF;
+			returnCRC= calcCRC(_TxBuffer,i);
+			_TxBuffer[i++] = returnCRC & 0xFF;             //LSB first for CRC
+			_TxBuffer[i++] = (returnCRC >> 8) & 0xFF;
+			Serial.write(_TxBuffer,i);
 			break;
 			
 		  case _GET_STRING:
@@ -1103,26 +1120,42 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			break;
 			*/
 			//Just reply with blank string for now
-			_TxBuffer[2] = buf[2];
-			_TxBuffer[3] = 0;
-			_TxBufferLength = 4;
-			returnCRC= calcCRC(_TxBuffer,_TxBufferLength);
-			_TxBuffer[_TxBufferLength++] = returnCRC & 0xFF;
-			_TxBuffer[_TxBufferLength++] = (returnCRC >> 8) & 0xFF;
-			Serial.write(_TxBuffer,_TxBufferLength);
+			i=2;
+            if (_ea){
+                _TxBuffer[i++] = buf[2];
+                _TxBuffer[i++] = buf[3];
+                
+            }
+            else {
+                _TxBuffer[i++] = buf[2];
+            }
+			_TxBuffer[i++] = 0;
+			returnCRC= calcCRC(_TxBuffer,i);
+			_TxBuffer[i++] = returnCRC & 0xFF;
+			_TxBuffer[i++] = (returnCRC >> 8) & 0xFF;
+			Serial.write(_TxBuffer,i);
 			break;
 		  case _GET_COLOR:
 			//_TxBuffer[0] = _HOST_ADDRESS;  //already set above, put here for clarity
 			//_TxBuffer[1] = _GET_COLOR;     //already set above, put here for clarity
-			_TxBuffer[2] = buf[2];
-			_TxBuffer[3] = (_Colors[buf[2]] >> 24) & 0xFF;  //MSB first for data
-			_TxBuffer[4] = (_Colors[buf[2]] >> 16) & 0xFF;
-			_TxBuffer[5] = (_Colors[buf[2]] >>  8) & 0xFF;
-			_TxBuffer[6] = _Colors[buf[2]] & 0xFF;
-			returnCRC= calcCRC(_TxBuffer,7);
-			_TxBuffer[7] = returnCRC & 0xFF;             //LSB first for CRC
-			_TxBuffer[8] = (returnCRC >> 8) & 0xFF;
-			Serial.write(_TxBuffer,9);
+			i=2;
+            if (_ea){
+                _TxBuffer[i++] = buf[2];
+                _TxBuffer[i++] = buf[3];
+                
+            }
+            else {
+                _TxBuffer[i++] = buf[2];
+            }
+            _TxBuffer[i++] = (_Colors[start] >> 24) & 0xFF;//MSB first for data
+            _TxBuffer[i++] = (_Colors[start] >> 16) & 0xFF;
+            _TxBuffer[i++] = (_Colors[start] >>  8) & 0xFF;
+			_TxBuffer[i++] =  _Colors[start]        & 0xFF;
+
+			returnCRC= calcCRC(_TxBuffer,i);
+			_TxBuffer[i++] = returnCRC & 0xFF;             //LSB first for CRC
+			_TxBuffer[i++] = (returnCRC >> 8) & 0xFF;
+			Serial.write(_TxBuffer,i);
 			
 			break;
 		  case _GET_BYTE_ARRAY:
@@ -1135,11 +1168,11 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			//TODO: Implement _GET_COLOR_ARRAY
 			break;
 		  case _SET_BYTE:
-			_Bytes[buf[2]] = buf[3];
+			_Bytes[start] = buf[3+_ea];
 			SetCmd_Reply(_SET_BYTE);
 			break;
 		  case _SET_WORD:
-			_Words[buf[2]] = word(buf[3],buf[4]);
+			_Words[start] = word(buf[3+_ea],buf[4+_ea]);
 			SetCmd_Reply(_SET_WORD);
 			break;
 		  case _SET_STRING:
@@ -1147,7 +1180,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			SetCmd_Reply(_SET_STRING);
 			break;
 		  case _SET_COLOR:
-			_Colors[buf[2]] = ((long(buf[3]) << 24) | (long(buf[4]) << 16) | (buf[5] << 8) | buf[6]);        
+			_Colors[start] = ((long(buf[3+_ea]) << 24) | (long(buf[4+_ea]) << 16) | (buf[5+_ea] << 8) | buf[6+_ea]);        
 			SetCmd_Reply(_SET_COLOR);
 			break;
 		  case _SET_BYTE_ARRAY:
