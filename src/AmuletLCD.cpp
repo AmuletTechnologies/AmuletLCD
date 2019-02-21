@@ -892,6 +892,8 @@ int8_t AmuletLCD::recieve_OpcodeParser(uint8_t b){
             case _SET_COLOR:
             case _SET_STRING:
                 return -2; //No packet data follows opcode in a reply to a SET command, just CRC 
+            case _INVOKE_GEMSCRIPT:
+                return 4;
         }
     }
     //else - not a reply
