@@ -24,7 +24,7 @@
 
 #include "Arduino.h"
 
-// Define the buffer lengths here, if the user hasnt set their own.
+// Define the buffer lengths here, if the user hasn't set their own.
 // This is long enough for most messages. 
 // Change to send/receive long arrays.
 // Max is 0x400 bytes.
