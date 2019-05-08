@@ -686,7 +686,7 @@ uint8_t AmuletLCD::send_command_blocking(uint8_t * command, uint16_t length)
 }
 
 /**
-* Utility function to caluculate the MODBUS CRC of the given array.
+* Utility function to calculate the MODBUS CRC of the given array.
 * @param ptr uint8_t* the array to calculate
 * @param count uint16_t the length of the array
 * @return uint16_t The calculated CRC value.
@@ -779,7 +779,7 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
             _UART_State = _STATIC_LENGTH;
         }   
         break;
-    case _STATIC_LENGTH:              //fixed length command. increment i until count bytes recieved, then get CRC
+    case _STATIC_LENGTH:              //fixed length command. increment i until count bytes received, then get CRC
         if (i < count) {
             _RxBuffer[_RxBufferLength++] = b;
             i++;
@@ -867,8 +867,8 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
 }
 
 /**
-* Utility function to caluculate the length of a command based upon the opcode.
-* Array command length can be caluclated after getting the count, and string commands look for a Null.
+* Utility function to calculate the length of a command based upon the opcode.
+* Array command length can be calculated after getting the count, and string commands look for a Null.
 * @param b uint8_t The opcode
 * @return uint8_t The number of bytes left before the CRC
 */
@@ -925,7 +925,7 @@ int8_t AmuletLCD::recieve_OpcodeParser(uint8_t b){
 /**
 * Utility function to confirm the CRC is valid.
 * Split the buffer into two parts: 
-*  1. Everyting up to but not including the last two bytes
+*  1. Everything up to but not including the last two bytes
 *  2. The last two bytes
 * Calculate the CRC on #1 and make sure it matches #2
 * #2 is little endian, so swap the bytes
@@ -991,7 +991,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 				}
 			}
 			else{
-				setError();//TODO Aray overflow error
+				setError();//TODO Array overflow error
 			}
 			_GetBytesReply = true;
 			break;
@@ -1009,7 +1009,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 				}
 			}
 			else{
-				setError();//TODO Aray overflow error
+				setError();//TODO Array overflow error
 			}
 			_GetWordsReply = true;
 			break;
@@ -1031,7 +1031,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 				}
 			}
 			else{
-				setError();//TODO Aray overflow error
+				setError();//TODO Array overflow error
 			}
 			_GetColorsReply = true;
 			break;
@@ -1204,7 +1204,7 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 		}
 	  }
   }
-  //else for Recieve master command - CRC mismatch: do nothing. Amulet will resend after timeout
+  //else for Receive master command - CRC mismatch: do nothing. Amulet will resend after timeout
 }
 
 /**
