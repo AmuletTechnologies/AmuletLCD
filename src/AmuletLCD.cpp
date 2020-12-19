@@ -538,6 +538,28 @@ int8_t AmuletLCD::setString(uint16_t loc, const char * str){
     setString(loc, str, 1);
 }
 
+uint8_t AmuletLCD::requestString(uint16_t loc, uint8_t * destination_buffer, uint16_t buffer_length) {
+	if(Serial.availableForWrite() >= 5+_ea){
+		_GetStringReply = false;
+		_GetStringDest = destination_buffer;
+		_GetStringLen = buffer_length;
+        uint8_t command[6] = {_AMULET_ADDRESS, _GET_STRING, 0, 0, 0, 0};
+        uint8_t i;
+        if (_ea) {
+            command[2] = (uint8_t)(loc >> 8);
+            i = 3;
+        }
+        else {
+            i = 2;
+        }            
+        command[i++] = (uint8_t)(loc & 0xFF);
+        appendCRC(command,i);
+        i+=2;
+		return send_command_blocking(command, i);
+	}
+}
+
+
 /**
 * Send out a serial command to call a GEMscript public function that exists on the current page.
 * This includes "@" functions like "@load" and "@init" that do not require a parameter.
@@ -620,7 +642,10 @@ uint8_t AmuletLCD::send_command_blocking(uint8_t * command, uint16_t length)
 					if (_GetWordReply)
 						return true;
 					break;
-//				case _GET_STRING:
+				case _GET_STRING:
+				if (_GetStringReply)
+						return true;
+					break;
 				case _GET_COLOR:
 					if (_GetColorReply)
 						return true;
@@ -761,7 +786,7 @@ void AmuletLCD::CRC_State_Machine(uint8_t b){
         }
         else if (count == 0) {           //variable length array or string
             _RxBuffer[_RxBufferLength++] = b;
-            if (b == _SET_STRING) {
+            if ((b == _SET_STRING) || (b == _GET_STRING)) {
                 if (_ea)
                     _UART_State = _VARIABLE_LENGTH_STRING_ADDR1;
                 else
@@ -886,6 +911,7 @@ int8_t AmuletLCD::recieve_OpcodeParser(uint8_t b){
             case _GET_BYTE_ARRAY:
             case _GET_WORD_ARRAY:
             case _GET_COLOR_ARRAY:
+			case _GET_STRING:
                 return 0;
             case _SET_BYTE:
             case _SET_WORD:
@@ -956,6 +982,8 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 	uint16_t start;
 	uint16_t count = buf[3+_ea];
 	uint8_t * arrayPtr;
+	uint8_t * strPtr;
+	uint8_t * srcPtr;
 	uint8_t temp1, temp2, temp3;
     if (_ea)
         start = (buf[2] << 8) + buf[3];
@@ -974,6 +1002,14 @@ void AmuletLCD::processUARTCommand(uint8_t *buf, uint16_t bufLen){
 			_GetWordReply = true;
 			break;
 		  case _GET_STRING:
+			strPtr = _GetStringDest;
+			srcPtr = buf+3+_ea;
+			for (uint16_t i = 0; i < _GetStringLen && 0 != *srcPtr; i++) {
+				*strPtr++ = *srcPtr++;
+			}
+			*strPtr = 0; //finish will null.
+			_GetStringReply = true;
+			
 			break;
 		  case _GET_COLOR:
 			_Colors[start] = ((long(buf[3+_ea]) << 24) | (long(buf[4+_ea]) << 16) | (long(buf[5+_ea]) << 8) | buf[6+_ea]);

@@ -92,6 +92,8 @@ class AmuletLCD
 	
 	int8_t setString(uint16_t loc, const char * str);
     int8_t setString(uint16_t loc, const char * str, uint8_t waitForResponse);
+	uint8_t requestString(uint16_t start, uint8_t * destination_buffer, uint16_t buffer_length);
+	
     int8_t callScript(const char * fname, uint8_t waitForResponse);
     int8_t callScript(const char * fname);
     int32_t scriptReply();
@@ -110,7 +112,6 @@ class AmuletLCD
 		RPC_Entry * _RPCs;
 		uint16_t _RPCsLength;    //max length = 256
 		
-        // no string support at this time
 		uint8_t   _ea; // extended address
 		uint32_t  _Timeout_ms;
 		uint8_t   _retries;
@@ -120,6 +121,8 @@ class AmuletLCD
 		uint32_t  _lastError;
 		uint8_t   _reply;
         int32_t   _scriptReply;
+		uint8_t * _GetStringDest;
+		uint16_t  _GetStringLen;
         
 		volatile uint8_t _GetByteReply;
 		volatile uint8_t _GetWordReply;
@@ -173,6 +176,8 @@ class AmuletLCD
 #define _VARIABLE_LENGTH_STRING         7
 #define _VARIABLE_LENGTH_STRING_ADDR1   8
 #define _VARIABLE_LENGTH_STRING_ADDR2   9
+//#define _VARIABLE_LENGTH_STRING_GET_ADDR1 10
+//#define _VARIABLE_LENGTH_STRING_GET_ADDR2 11
 #define _GET_CRC1                       10
 #define _GET_CRC2                       11
 
