@@ -198,7 +198,7 @@ uint8_t AmuletLCD::requestBytes(uint16_t start, uint8_t count){
 * @return int8_t true if correct response was received, false otherwise
 */
 int8_t AmuletLCD::setByte(uint16_t loc, uint8_t value){
-	setByte(loc, value, true);
+	return setByte(loc, value, true);
 }
 
 /**
@@ -535,7 +535,7 @@ int8_t AmuletLCD::setString(uint16_t loc, const char * str, uint8_t waitForRespo
 * @return int8_t true if correct response was received, false otherwise
 */
 int8_t AmuletLCD::setString(uint16_t loc, const char * str){
-    setString(loc, str, 1);
+    return setString(loc, str, 1);
 }
 
 uint8_t AmuletLCD::requestString(uint16_t loc, uint8_t * destination_buffer, uint16_t buffer_length) {
